@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table th:each="dto : ${list}">
+    <td th:if="${dto.mailSender == 1}">
+        [보낸 메일함] [[${dto.mailTitle}]]
+    </td>
+    <td th:unless="${dto.mailCheck == 1}">
+        [받은 메일함] [[${dto.mailTitle}]]
+    </td>
+</table>
+</body>
+</html>
