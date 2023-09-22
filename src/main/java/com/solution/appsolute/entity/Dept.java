@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class Dept {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Long deptNo;
 

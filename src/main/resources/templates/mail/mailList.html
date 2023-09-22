@@ -5,13 +5,23 @@
     <title>Title</title>
 </head>
 <body>
-<table th:each="dto : ${list}">
-    <td th:if="${dto.mailSender == 1}">
-        [보낸 메일함] [[${dto.mailTitle}]]
-    </td>
-    <td th:unless="${dto.mailCheck == 1}">
-        [받은 메일함] [[${dto.mailTitle}]]
-    </td>
+
+<table border="1">
+    <tr>
+        <th>메일 제목</th>
+        <th>작성 시간</th>
+    </tr>
+    <tr th:each="dto : ${list}">
+        <td th:if="${dto.mailSender == 1}" >
+            [보낸 메일함] [[${dto.mailTitle}]]
+        </td>
+        <td th:unless="${dto.mailSender == 1}" >
+            [받은 메일함] [[${dto.mailTitle}]]
+        </td>
+        <td>[[${dto.mailDate}]]</td>
+
+    </tr>
+
 </table>
 </body>
 </html>
