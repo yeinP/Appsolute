@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,8 +30,8 @@ public class MailController {
     @Autowired
     MailRepository mailRepository;
 
-    @GetMapping("/mail")
-    public String list(Model model){
+    @GetMapping("/mail/{sender}/{receiver}")
+    public String list(Model model, @PathVariable Long sender, @PathVariable Long receiver){
 //        List<Mail> list = mailRepository.getListDesc();
 //        model.addAttribute("list", list);
 //        TypedQuery<Mail> query = em.createQuery("select m from Mail m", Mail.class);
@@ -37,8 +39,9 @@ public class MailController {
 //        List<Mail> resultList = query.getResultList();
 //        log.info("==============" + resultList);
 //        model.addAttribute("list", resultList);
-
-        model.addAttribute("list", mailEm.findAll());
+        log.info("--------------> sender: {}", sender);
+        model.addAttribute("list", mailEm.findAllById(sender, receiver));
+//        model.addAttribute("list", mailRepository.findByMailReceiver(id));
         return "mail/mailList";
     }
 }

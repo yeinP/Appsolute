@@ -9,6 +9,7 @@
 <table border="1">
     <tr>
         <th>메일 제목</th>
+        <th>보낸/받는 사람</th>
         <th>작성 시간</th>
     </tr>
     <tr th:each="dto : ${list}">
@@ -18,6 +19,7 @@
         <td th:unless="${dto.mailSender == 1}" >
             [받은 메일함] [[${dto.mailTitle}]]
         </td>
+        <td>[[${dto.mail</td>
         <td>[[${dto.mailDate}]]</td>
 
     </tr>

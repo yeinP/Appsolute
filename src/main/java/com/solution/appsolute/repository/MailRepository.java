@@ -11,4 +11,6 @@ import java.util.List;
 public interface MailRepository extends JpaRepository<Mail, Long> {
     @Query(value = "select * from Mail order by mailNum desc", nativeQuery = true)
     List<Mail> getListDesc();
+
+    List<Mail> findByMailReceiverOrMailSender(Long Receiver, Long Sender);
 }

@@ -14,12 +14,16 @@ public class MailEm {
     @PersistenceContext
     EntityManager em;
 
-    public List<Mail> findAll(){
-        String sql = "select m from Mail m";
+    public List<Mail> findAllById(Long sender, Long receiver){
+        String sql = "select m from Mail m " +
+                "where m.mailSender = :mailSender or m.mailReceiver = :mailReceiver";
         TypedQuery<Mail> query = em.createQuery(sql, Mail.class);
-
+        query.setParameter("mailSender", sender);
+        query.setParameter("mailReceiver", receiver);
         List<Mail> list = query.getResultList();
 
         return list;
     }
+
+
 }
