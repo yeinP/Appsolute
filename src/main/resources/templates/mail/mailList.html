@@ -5,25 +5,37 @@
     <title>Title</title>
 </head>
 <body>
+<h1>전체 메일함</h1>
+<hr>
+<a href="/mail/1">전체 메일함</a>
+<a href="/mail/send/1">보낸 메일함</a>
+<a href="/mail/receive/1">받은 메일함</a>
+<hr>
 
 <table border="1">
     <tr>
+        <th>메일 번호</th>
         <th>메일 제목</th>
         <th>보낸/받는 사람</th>
         <th>작성 시간</th>
     </tr>
     <tr th:each="dto : ${list}">
-        <td th:if="${dto.mailSender == 1}" >
-            [보낸 메일함] [[${dto.mailTitle}]]
+        <td>[[${dto.mail_num}]]</td>
+        <td th:if="${dto.mail_sender == 1}" >
+            <a th:href="@{/mail/read/{mail_num}(mail_num = ${dto.mail_num})}">
+            [보낸 메일함] [[${dto.mail_title}]]
+            </a>
         </td>
-        <td th:unless="${dto.mailSender == 1}" >
-            [받은 메일함] [[${dto.mailTitle}]]
+        <td th:unless="${dto.mail_sender == 1}" >
+            <a th:href="@{/mail/read/{mail_num}(mail_num = ${dto.mail_num})}">
+            [받은 메일함] [[${dto.mail_title}]]
+            </a>
         </td>
-        <td>[[${dto.mail</td>
-        <td>[[${dto.mailDate}]]</td>
-
+        <td>[[${dto.emp_name}]]</td>
+        <td>[[${dto.mail_Date}]]</td>
     </tr>
 
 </table>
+
 </body>
 </html>

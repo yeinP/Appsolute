@@ -3,6 +3,8 @@ package com.solution.appsolute.controller.mail;
 import com.solution.appsolute.entity.Mail;
 import com.solution.appsolute.repository.MailEm;
 import com.solution.appsolute.repository.MailRepository;
+import com.solution.appsolute.spring.dao.mail.MailDao;
+import com.solution.appsolute.spring.dto.MailListRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,18 +32,39 @@ public class MailController {
     @Autowired
     MailRepository mailRepository;
 
-    @GetMapping("/mail/{sender}/{receiver}")
-    public String list(Model model, @PathVariable Long sender, @PathVariable Long receiver){
-//        List<Mail> list = mailRepository.getListDesc();
-//        model.addAttribute("list", list);
-//        TypedQuery<Mail> query = em.createQuery("select m from Mail m", Mail.class);
-//
-//        List<Mail> resultList = query.getResultList();
-//        log.info("==============" + resultList);
-//        model.addAttribute("list", resultList);
-        log.info("--------------> sender: {}", sender);
-        model.addAttribute("list", mailEm.findAllById(sender, receiver));
-//        model.addAttribute("list", mailRepository.findByMailReceiver(id));
+    @Autowired
+    private MailDao mailDao;
+
+    @GetMapping("/mail")
+    public String test(Model model){
+//        model.addAttribute("list", mailDao.listDao(1L, 1L));
+
+        model.addAttribute("list", mailRepository.list(1L, 1L));
+        return "list";
+    }
+
+    @GetMapping("/mail/{id}")
+    public String list(Model model, @PathVariable Long id){
+        model.addAttribute("list", mailDao.listDao(id));
+//        System.out.println("-----------------" + mailRepository.list(id));
         return "mail/mailList";
     }
+
+    @GetMapping("/mail/send/{send}")
+    public String mailSender(Model model, @PathVariable Long send){
+        model.addAttribute("list", mailRepository.findByMailSend(send)); // JPA(MailRepository)
+        return "mail/mailSend";
+    }
+
+    @GetMapping("/mail/receive/{receive}")
+    public String mailReceiver(Model model, @PathVariable Long receive){
+        model.addAttribute("list", mailRepository.findByMailReceive(receive)); //jpa(MailRepository)
+        System.out.println("------------" + mailRepository.findByMailReceive(receive));
+        return "mail/mailReceive";
+    }
+
+//    @GetMapping("/mail/{}")
+//    public String readMail(Model model, @PathVariable Long mailNum){
+//        return "";
+//    }
 }
