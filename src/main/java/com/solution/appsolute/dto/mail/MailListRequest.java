@@ -1,4 +1,4 @@
-package com.solution.appsolute.spring.dto;
+package com.solution.appsolute.dto.mail;
 
 import lombok.*;
 

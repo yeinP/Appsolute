@@ -1,16 +1,13 @@
-package com.solution.appsolute.repository;
+package com.solution.appsolute.dao.mail.repository;
 
 import com.solution.appsolute.entity.Mail;
-import com.solution.appsolute.spring.dto.MailDto;
-import com.solution.appsolute.spring.dto.MailList;
-import com.solution.appsolute.spring.dto.MailListRequest;
-import com.solution.appsolute.spring.dto.MailListRequest1;
+import com.solution.appsolute.dto.mail.MailDto;
+import com.solution.appsolute.dto.mail.MailListRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface MailRepository extends JpaRepository<Mail, Long> {
@@ -40,6 +37,11 @@ public interface MailRepository extends JpaRepository<Mail, Long> {
             "and m.mailNum = :num " +
             "order by m.mailNum desc")
     MailListRequest list(Long id, Long num); // 필요한 모든 데이터가 출력됨
+
+    int countBy(); // 메일 전체 개수 조회
+
+    @Query("update Mail m set m.mailCheck = m.mailCheck + 1 where m.mailNum = :no")
+    void increaseReadCount(Long no) ;
 
 //    @Query(value = "select m.mailNum, m.mailCheck, m.mailSender, m.mailReceiver, e.empName, m.mailTitle, m.mailContent, m.mailDate" +
 //            " from Mail m inner join Employee e on m.mailSender = e.empNum where m.mailSender = 1" +

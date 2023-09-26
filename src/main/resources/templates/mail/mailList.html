@@ -7,9 +7,9 @@
 <body>
 <h1>전체 메일함</h1>
 <hr>
-<a href="/mail/1">전체 메일함</a>
-<a href="/mail/send/1">보낸 메일함</a>
-<a href="/mail/receive/1">받은 메일함</a>
+<a href="/mail">전체 메일함</a>
+<a href="/mail/send">보낸 메일함</a>
+<a href="/mail/receive">받은 메일함</a>
 <hr>
 
 <table border="1">
@@ -20,7 +20,7 @@
         <th>작성 시간</th>
     </tr>
     <tr th:each="dto : ${list}">
-        <td>[[${dto.mail_num}]]</td>
+        <td>[[${dto.mail_Num}]]</td>
         <td th:if="${dto.mail_sender == 1}" >
             <a th:href="@{/mail/read/{mail_num}(mail_num = ${dto.mail_num})}">
             [보낸 메일함] [[${dto.mail_title}]]

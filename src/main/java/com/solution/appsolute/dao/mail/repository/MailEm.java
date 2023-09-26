@@ -1,4 +1,4 @@
-package com.solution.appsolute.repository;
+package com.solution.appsolute.dao.mail.repository;
 
 import com.solution.appsolute.entity.Mail;
 import org.springframework.stereotype.Repository;
