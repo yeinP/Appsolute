@@ -30,8 +30,8 @@ public interface MailRepository extends JpaRepository<Mail, Long> {
     List<MailDto> findByMailReceive(Long mailReceiver);
 
 
-    @Query(value = "SELECT m.mailNum as mailNum, m.mailTitle as mailTitle, m.mailContent as mailContent, m.mailDate as mailDate, m.mailSender AS SenderID, e.empName AS SenderName, e.empEmail as senderEmail, " +
-            "m.mailReceiver AS receiverID, f.empName AS receiverName, f.empEmail as receiverEmail, m.mailCheck as mailCheck " +
+    @Query(value = "SELECT m.mailNum as mailNum, m.mailTitle as mailTitle, m.mailContent as mailContent, m.mailDate as mailDate, m.mailSender AS senderId, e.empName AS senderName, e.empEmail as senderEmail, " +
+            "m.mailReceiver AS receiverId, f.empName AS receiverName, f.empEmail as receiverEmail, m.mailCheck as mailCheck " +
             " FROM Mail m " +
             "inner JOIN Employee e ON m.mailSender = e.empNum  " +
             " INNER JOIN Employee AS f ON m.mailReceiver = f.empNum" +
@@ -39,7 +39,7 @@ public interface MailRepository extends JpaRepository<Mail, Long> {
             "or f.empNum = :id) " +
             "and m.mailNum = :num " +
             "order by m.mailNum desc")
-    List<MailListRequest> list(Long id, Long num); // 필요한 모든 데이터가 출력됨
+    MailListRequest list(Long id, Long num); // 필요한 모든 데이터가 출력됨
 
 //    @Query(value = "select m.mailNum, m.mailCheck, m.mailSender, m.mailReceiver, e.empName, m.mailTitle, m.mailContent, m.mailDate" +
 //            " from Mail m inner join Employee e on m.mailSender = e.empNum where m.mailSender = 1" +

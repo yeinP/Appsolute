@@ -63,8 +63,9 @@ public class MailController {
         return "mail/mailReceive";
     }
 
-//    @GetMapping("/mail/{}")
-//    public String readMail(Model model, @PathVariable Long mailNum){
-//        return "";
-//    }
+    @GetMapping("/mail/read/{mailNum}")
+    public String readMail(Model model, @PathVariable Long mailNum){
+        model.addAttribute("list", mailRepository.list(1L, mailNum));
+        return "mail/mailRead";
+    }
 }
