@@ -8,9 +8,14 @@
 <h2>Login</h2>
 <form th:action="@{/login/mypage}" method="post">
     사원번호: <input type="text" name="emp_num" ><br>
+    <div id="textError1"></div>
     비밀번호: <input type="password" name="emp_password"><br>
-    <input type="checkbox" name="rememberMe" id="rememberMe"> 아이디 기억하기<br>
-    <input type="submit" value="로그인"></input>
+    <div id="textError2"></div>
+
+    <input id="login" type="submit" value="로그인"></input>
 </form>
+<div id="error-message" th:text="${error_message}" th:style="${error_messageStyle}" style="color: red;"></div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/js/loginCheck.js"></script>
 </body>
 </html>

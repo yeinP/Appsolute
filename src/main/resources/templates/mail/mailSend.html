@@ -10,6 +10,8 @@
 <a href="/mail">전체 메일함</a>
 <a href="/mail/send">보낸 메일함</a>
 <a href="/mail/receive">받은 메일함</a>
+<a href="/mail/unread">안 읽은 메일함</a>
+<a href="/mail/write">메일 작성</a>
 <hr>
 
 <table border="1">
@@ -24,15 +26,24 @@
             [[${dto.mailNum}]]
         </td>
         <td>
+            <a th:href="@{/mail/read/{mailNum}(mailNum = ${dto.mailNum})}">
             [[${dto.mailTitle}]]
+            </a>
         </td>
         <td>
             [[${dto.empName}]]
         </td>
         <td>[[${dto.mailDate}]]</td>
-
     </tr>
+    <tr>
+        <td colspan="4">
+            <th:block th:each="page:${#numbers.sequence(startPage, endPage)}">
+                <a th:href="@{/mail/send(page=${page - 1})}" th:text="${page}"></a>
 
+            </th:block>
+        </td>
+    </tr>
 </table>
+
 </body>
 </html>

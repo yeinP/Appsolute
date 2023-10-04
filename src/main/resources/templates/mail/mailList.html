@@ -10,8 +10,9 @@
 <a href="/mail">전체 메일함</a>
 <a href="/mail/send">보낸 메일함</a>
 <a href="/mail/receive">받은 메일함</a>
+<a href="/mail/unread">안 읽은 메일함</a>
+<a href="/mail/write">메일 작성</a>
 <hr>
-
 <table border="1">
     <tr>
         <th>메일 번호</th>
@@ -19,23 +20,41 @@
         <th>보낸/받는 사람</th>
         <th>작성 시간</th>
     </tr>
-    <tr th:each="dto : ${list}">
-        <td>[[${dto.mail_Num}]]</td>
-        <td th:if="${dto.mail_sender == 1}" >
+    <th:block th:if="${list.hasNoArticles()}">
+        <tr>
+            <td colspan="4">게시글이 없습니다.</td>
+        </tr>
+    </th:block>
+    <tr th:each="dto : ${list.content}">
+        <td th:text="${dto.mail_num}">
+        <td th:each="list : ${list}" th:if="${dto.mail_sender == list.id}" >
             <a th:href="@{/mail/read/{mail_num}(mail_num = ${dto.mail_num})}">
-            [보낸 메일함] [[${dto.mail_title}]]
+                [보낸 메일함] [[${dto.mail_title}]]
             </a>
         </td>
-        <td th:unless="${dto.mail_sender == 1}" >
+        <td th:each="list : ${list}" th:unless="${dto.mail_sender == list.id}" >
             <a th:href="@{/mail/read/{mail_num}(mail_num = ${dto.mail_num})}">
-            [받은 메일함] [[${dto.mail_title}]]
+                [받은 메일함] [[${dto.mail_title}]]
             </a>
         </td>
         <td>[[${dto.emp_name}]]</td>
         <td>[[${dto.mail_Date}]]</td>
     </tr>
-
+    <tr th:each="dto : ${list}">
+        <td colspan="4">
+            <th:block th:if="${dto.startPage > 5}">
+                <a th:href="@{mail(pageNo=${dto.startPage - 5})}" th:text="이전"/>
+            </th:block>
+            <th:block th:each="pNo : ${#numbers.sequence(dto.startPage, dto.endPage)}" >
+                <a th:href="@{mail(pageNo=${pNo})}" th:text="${pNo}"></a>
+            </th:block>
+            <th:block th:if="${dto.endPage < dto.totalPages}">
+                <a th:href="@{mail(pageNo=${dto.startPage + 5})}" th:text="다음"/>
+            </th:block>
+        </td>
+    </tr>
 </table>
+
 
 </body>
 </html>

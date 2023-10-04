@@ -38,7 +38,7 @@ dependencies {
 	// mysql
 	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.33'
 	// log
-	implementation('org.slf4j:jcl-over-slf4j')
+    implementation('org.slf4j:jcl-over-slf4j')
 	implementation('ch.qos.logback:logback-classic')
 	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4:1.16'
 	// jsp code
@@ -48,6 +48,8 @@ dependencies {
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'
 	// validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+
 	// Thymeleaf Layout Dialect 추가
 	//implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '3.0.0'
 	// https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-java8time

@@ -10,8 +10,17 @@
 <a href="/mail">전체 메일함</a>
 <a href="/mail/send">보낸 메일함</a>
 <a href="/mail/receive">받은 메일함</a>
+<a href="/mail/unread">안 읽은 메일함</a>
+<a href="/mail/write">메일 작성</a>
 <hr>
 <table  border="1" th:each="dto:${list}">
+    <tr>
+        <td th:colspan="2">
+        <a th:href="@{/mail/delete/{no}(no=${dto.mailNum})}">
+            삭제
+        </a>
+        </td>
+    </tr>
     <tr>
         <td>메일 제목</td>
         <td>[[${dto.mailTitle}]]</td>

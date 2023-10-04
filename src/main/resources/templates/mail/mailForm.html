@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>메일 작성하기</title>
+</head>
+<body>
+<h1>메일 작성하기</h1>
+<form method="post" action="write">
+    받는 사람
+    <select name="deptNo" id="deptNoSelect">
+        <option value="">부서선택</option>
+        <th:block th:each="deptInfo : ${deptNameList}">
+            <option th:value="${deptInfo[0]}" th:text="${deptInfo[1]}"></option>
+        </th:block>
+    </select>
+
+    <select name="mailReceiver" id="empSelect">
+        <option value="">사원 선택</option>
+    </select>
+    <br>
+    메일 제목<input type="text" name="mailTitle"/>
+    <br>
+    메일 내용<textarea rows="10" cols="30" name="mailContent"></textarea>
+    <br>
+    전송<input type="submit"/>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+    //부서선택하면 부서에 있는 사원들 불러오기(사원이름(사원번호)) 이런식???
+    document.getElementById('deptNoSelect').addEventListener('change', function (){
+        let selectDeptNo = this.value;
+        let empSelect = document.getElementById('empSelect');
+        empSelect.innerHTML="";
+
+        $.ajax({
+            url: '/mailSender',
+            type: 'GET',
+            data: {deptNo: selectDeptNo},
+            success: function (data) {
+                empSelect.innerHTML = '<option value=0>사원 선택</option>';
+                data.forEach(function (empInfo) {
+                    let option = document.createElement('option');
+                    option.value = empInfo[0];
+                    option.text = empInfo[1] + ' (사번:' + empInfo[0] + ')';
+                    empSelect.appendChild(option);
+                });
+
+            },
+        });
+
+    });
+</script>
+</body>
+</html>
