@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .AppTitle {
+            text-align: center;
+        }
+
+        .AppTitle span {
+            font-size: 25px;
+            font-weight: bolder;
+        }
+
+        .approvalCon {
+            display: flex;
+            float:right;
+        }
+
+        .approvalCon table {
+            width: 100px;
+            text-align: center;
+        }
+
+        .approvalCon table td{
+            border-bottom: 1px solid black;
+        }
+
+        .detailApp {
+            float: none;
+        }
+        .approvalConDate {
+            text-align: right;
+            width: 80%;
+            font-size: 20px;
+            float: left;
+        }
+
+        .approvalConBox {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-content: stretch;
+            align-items: flex-end;
+        }
+
+        .detailApp {
+            margin-top:15px;
+        }
+
+        .approvalCon table tr:nth-child(1){
+            height: 10px;
+            background-color: silver;
+        }
+        .approvalCon table tr:nth-child(2){
+             height: 60px;
+         }
+        .approvalCon table tr:nth-child(31){
+            height: 10px;
+        }
+
+        .approvalCon table tr:nth-child(2) td{
+           font-size: 20px;
+        }
+        .contents table td {
+            border: 1px solid black;
+            font-size: 18px;
+        }
+
+        .contents table {
+            width:95%;
+            text-align: center;
+        }
+
+        .contents .purchaseApproval table {
+
+        }
+
+        .contents {
+            margin-top:20px;
+        }
+        .approvalConBox {
+            width: 95%;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container"  style="margin-top: 50px">
+        <h1 class="centered-text" style="font-weight: bold">결재 문서</h1>
+        <hr>
+        <br>
+        <div class="AppTitle">
+            <span th:switch="${approval.documentNum}">
+                    <span th:case="1" >지출결의서</span>
+                    <span th:case="2">일반 기안서</span>
+                    <span th:case="3">연차신청서</span>
+                   </span>
+        </div>
+            <br>
+        <div class="approvalConBox">
+        <div class="approvalConDate">
+            <h5>기   안   일  :  [[${#dates.format(approval.approvalDate, 'yyyy-MM-dd')}]]</h5>
+        </div>
+        <div class="approvalCon">
+            <th:block th:each="approvalDetail : ${approvalDetail}">
+                <table th:border="1">
+
+                    <tr>
+                        <td>
+                            담당
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <th:block th:if="${approvalDetail.approvalStatus == 0}">
+                                미결
+                            </th:block>
+                            <th:block th:if="${approvalDetail.approvalStatus == 1}">
+                                결재완료
+                            </th:block>
+                            <th:block th:if="${approvalDetail.approvalStatus == 2}">
+                                반려
+                            </th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                           담당자(<span th:text="${approvalDetail.empCheckNum}"></span>)
+                        </td>
+                    </tr>
+                    </tr>
+
+                </table>
+            </th:block>
+        </div>
+        </div>
+        <div class="contents">
+        <div class="purchaseApproval">
+            <table>
+                <colgroup>
+                    <col width="10%">
+                    <col width="20%">
+                    <col width="10%">
+                    <col width="20%">
+                    <col width="10%">
+                    <col width="20%">
+                </colgroup>
+                <tr height="50px;">
+                    <td style="font-weight: 600;">성 명</td>
+                    <td th:text="${purchaseEmp.empName}"></td>
+                    <td style="font-weight: 600;">부 서</td>
+                    <td th:text="${purchaseEmp.deptName}"></td>
+                    <td style="font-weight: 600;">직 책</td>
+                    <td th:text="${purchaseEmp.empPosition}"></td>
+                </tr>
+                <tr height="50px;">
+                    <td style="font-weight: 600;">제목</td>
+                    <td colspan="5" th:text="${approval.appTitle}"></td>
+                </tr>
+            </table>
+        </div>
+            <th:block th:if="${approval.documentNum == 1}">
+        <div class="detailApp">
+            <table>
+                <colgroup>
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="60%">
+                    <col width="10%">
+                </colgroup>
+                <tr height="35px;">
+                    <td colspan="4" style="font-weight: 600;">내&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;용</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: 600;">분류</td>
+                    <td style="font-weight: 600;">금액</td>
+                    <td style="font-weight: 600;">상세내용</td>
+                    <td style="font-weight: 600;">비교</td>
+                </tr>
+                <tbody th:each="approvalContent : ${approvalContent}">
+                <tr>
+                    <td th:text="${approvalContent.fieldValue}"></td>
+                    <td th:text="${approvalContent.fieldValue2}"></td>
+                    <td th:text="${approvalContent.fieldValue3}"></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <table>
+            <colgroup>
+                <col width="90%">
+            </colgroup>
+            <tr th:each="approvalContent : ${approvalContent}" th:if="${approvalContent.total != null}">
+                <td style="font-weight: 600;">총액</td>
+                <td th:text="${approvalContent.total}"></td>
+            </tr>
+            <tr height="50px;">
+                <td colspan="2" style="font-weight: 600;">위 금액을 청구하오니 결재 부탁드립니다.</td>
+            </tr>
+        </table>
+            </th:block>
+            <th:block th:if="${approval.documentNum == 2}">
+                <table>
+                    <tr><td style="font-weight: 600;">내&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;용</td></tr>
+                    <tr th:each="approvalContent : ${approvalContent}" height="300px;"><td th:text="${approvalContent.fieldValue}"></td></tr>
+                    <tr height="100px"><td><strong>기안서 결재 부탁드립니다.</strong></td></tr>
+                </table>
+
+            </th:block>
+        </div>
+<form action="/approval/receivedApproval" method="post" id="btnSubmit">
+<th:block th:if="${approvalStatus.empCheckNum == sessionEmpNum}">
+    <button class="btn btn-success" id="check" th:name="checkNum" th:value="1">결재하기</button>
+    <button class="btn btn-danger" id="return" th:name="checkNum" th:value="2">반려하기</button>
+    <input type="hidden" name="approvalNum" th:value="${approval.approvalNum}">
+<!--    <input type="button" id="check" value="결재하기">-->
+</th:block>
+</form>
+
+    </div>
+
+<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+
+
+    $('#check').click(function (){
+        if (confirm("승인하시겠습니까?")) {
+            $('#btnSubmit').submit();
+        } else {
+            return false;
+        }
+    })
+    $('#return').click(function (){
+        if (confirm("반려하시겠습니까?")) {
+            $('#btnSubmit').submit();
+        } else {
+            return false;
+        }
+    })
+
+
+</script>
+</div>
+</body>
+</html>

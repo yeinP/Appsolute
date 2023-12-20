@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{login/basic.html}">
+<head>
+<meta charset="UTF-8">
+<title>Title</title>
+<Style>
+
+    /*.container {*/
+    /*    background-color: ghostwhite;*/
+    /*    border-radius: 5px;*/
+    /*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+    /*    padding: 20px;}*/
+
+    .deptList-table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .deptList-table th, .deptList-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    /*.deptList-table tr {*/
+    /*    background-color: #ffffff;*/
+    /*}*/
+
+    /*.deptList-table tr:nth-child(even) {*/
+    /*    background-color: #ffffff;*/
+    /*}*/
+
+    .deptList-table tbody tr:hover {
+        background-color: #ececec; /* 원하는 배경색 지정 */
+    }
+
+    form {
+        width: 95%;
+        margin: 0 auto;
+    }
+    label {
+        font-weight: bold;
+    }
+    select {
+        width: 100%;
+        padding: 3px;
+        margin: 3px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    input[type="text"], textarea {
+        width: 100%;
+        padding: 8px;
+        margin: 6px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    input[type="submit"] {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    input[type="checkbox"].chBox {
+        width: 15px;
+        height: 15px;
+    }
+    input[type="checkbox"][name="allcheck"] {
+        width: 15px;
+        height: 15px;
+    }
+
+    ul {
+        list-style: none;
+    }
+    li {
+        float: left;
+    }
+
+    #documentNum {
+        display: none;
+    }
+
+    .table-container {
+        display: -webkit-inline-flex;
+    }
+
+    .table3 {
+        width: 700px;
+    }
+
+</Style>
+</head>
+<body>
+<div layout:fragment="content">
+<div class="container"  style="margin-top: 50px">
+    <h1 class="centered-text" style="font-weight: bold">연차신청서</h1>
+    <hr>
+    <br>
+    <form action="/annualSuccess" method="post" id="pageForm">
+        <div class="table-container" style="width: 95%">
+            <div class="table1">
+                <table style="border: 1px solid rgb(0, 0, 0); font-family: malgun gothic,dotum,arial,tahoma; margin-top: 1px; border-collapse: collapse;height: 103px;"><!-- User -->
+                    <tbody>
+                    <tr>
+                        <td style="width: 65px ;background: rgb(226, 226, 226); padding: 5px; border: 1px solid black; height: 18px; text-align: center; color: rgb(0, 0, 0); font-size: 12px; font-weight: bold; vertical-align: middle;">
+                            기안자
+                        </td>
+                        <td style="background: rgb(255, 255, 255); padding: 5px; border: 1px solid black; text-align: left; color: rgb(0, 0, 0); font-size: 12px; font-weight: normal; vertical-align: middle;">
+                            <span unselectable="on" contenteditable="false" class="comp_wrap" data-cid="0" data-dsl="{{label:draftUser}}" data-wrapper="" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;" data-value="" data-autotype=""><span class="comp_item" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;">[[${authInfo.emp_name}]]</span><span contenteditable="false" class="comp_active" style="display: none; font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"> <span class="Active_dot1"></span><span class="Active_dot2"></span> <span class="Active_dot3"></span><span class="Active_dot4"></span> </span> <span contenteditable="false" class="comp_hover" data-content-protect-cover="true" data-origin="0" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"> <a contenteditable="false" class="ic_prototype ic_prototype_trash" data-content-protect-cover="true" data-component-delete-button="true"></a> </span> </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background: rgb(226, 226, 226); padding: 5px; border: 1px solid black; height: 18px; text-align: center; color: rgb(0, 0, 0); font-size: 12px; font-weight: bold; vertical-align: middle;">
+                            부서
+                        </td>
+                       <td style="background: rgb(255, 255, 255); padding: 5px; border: 1px solid black; text-align: left; color: rgb(0, 0, 0); font-size: 12px; font-weight: normal; vertical-align: middle;">
+                            <span unselectable="on" contenteditable="false" class="comp_wrap" data-cid="1" data-dsl="{{label:draftDept}}" data-wrapper="" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;" data-value="" data-autotype=""><span class="comp_item" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;">[[${authInfo.dept_no}]]</span><span contenteditable="false" class="comp_active" style="display: none; font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"> <span class="Active_dot1"></span><span class="Active_dot2"></span> <span class="Active_dot3"></span><span class="Active_dot4"></span> </span> <span contenteditable="false" class="comp_hover" data-content-protect-cover="true" data-origin="1" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"> <a contenteditable="false" class="ic_prototype ic_prototype_trash" data-content-protect-cover="true" data-component-delete-button="true"></a> </span> </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background: rgb(226, 226, 226); padding: 5px; border: 1px solid black; height: 18px; text-align: center; color: rgb(0, 0, 0); font-size: 12px; font-weight: bold; vertical-align: middle;">
+                            기안일
+                        </td>
+                        <td style="background: rgb(255, 255, 255); padding: 5px; border: 1px solid black; text-align: left; color: rgb(0, 0, 0); font-size: 12px; font-weight: normal; vertical-align: middle;">
+                            <span unselectable="on" contenteditable="false" class="comp_wrap" data-cid="2" data-dsl="{{label:draftDate}}" data-wrapper="" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;" data-value="" data-autotype=""><span class="comp_item" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"><input type="date" name="approvalDate" /></span><span contenteditable="false" class="comp_active" style="display: none; font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"> <span class="Active_dot1"></span><span class="Active_dot2"></span> <span class="Active_dot3"></span><span class="Active_dot4"></span> </span> <span contenteditable="false" class="comp_hover" data-content-protect-cover="true" data-origin="2" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"> <a contenteditable="false" class="ic_prototype ic_prototype_trash" data-content-protect-cover="true" data-component-delete-button="true"></a> </span> </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table2" style="margin-left: 3px;">
+                <table style="height:103px; border: 1px solid rgb(0, 0, 0); font-family: malgun gothic,dotum,arial,tahoma; border-collapse: collapse;">
+                    <tr>
+                        <td style="background: rgb(226, 226, 226); padding: 5px; width:55px; border: 1px solid black; height: 18px; text-align: center; color: rgb(0, 0, 0); font-size: 12px; font-weight: bold; vertical-align: middle;">결재선</td>
+                             <td style="width: 120px; background: rgb(255, 255, 255); padding: 5px; border: 1px solid black; text-align: left; color: rgb(0, 0, 0); font-size: 12px; font-weight: normal; vertical-align: middle;">
+                            <select id="deptPick">
+                                <option th:text="선택하세요"></option>
+                                <th:block th:each="deptList : ${deptList}">
+                                    <option th:value="${deptList.deptNo}" th:text="${deptList.deptName}"></option>
+                                </th:block>
+                            </select>
+                            <select th:class="empSelBox">
+                                <option th:value="pickMe" th:text="선택하세요"></option>
+                                <th:block th:each="empList : ${empList}">
+                                    <option th:class="optionClass" th:attr="data-deptnum=${empList.deptNo},data-empnum=${empList.empNum}" th:style="${'display:none'}" th:value="${empList.empNum}" th:text="${empList.empName}"></option>
+                                </th:block>
+                            </select><input type="button" th:id="addPerson" th:value="추가" style="display: block; width:100%;"/>
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="table3">
+                <div style="height: 103px; display: flex" th:id="addPersonDiv">
+                </div>
+            </div>
+        </div>
+        <input type="hidden" th:value="${lastKey}" name="insertedKey">
+        <div class="contents" style="margin: auto; width:95%; margin-top: 30px;">
+            <table style="margin: auto; width:95%;">
+                <tr>
+                    <td height="30" width="72" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; font-family: &quot;맑은 고딕&quot;, monospace; vertical-align: middle; text-align: center; border: 1px solid windowtext; height: 30px; width: 150px; background-color: rgb(226, 226, 226);"> <strong style="font-size: 9pt;">제 목</strong></td>
+                    <td colspan="12" width="760" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; font-family: &quot;맑은 고딕&quot;, monospace; vertical-align: middle; border-image: initial; font-size: 10pt; text-align: center; border-width: 1px; border-style: solid; border-color: windowtext black windowtext windowtext; width: 720px;"><input type="text" name="title"/></td>
+                </tr>
+                <tr>
+                    <td height="30" width="72" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; font-family: &quot;맑은 고딕&quot;, monospace; vertical-align: middle; text-align: center; border: 1px solid windowtext; height: 30px; width: 150px; background-color: rgb(226, 226, 226);"><strong style="font-size: 9pt;">작성일자</strong></td>
+                    <td colspan="12" width="760" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; font-family: &quot;맑은 고딕&quot;, monospace; vertical-align: middle; border-image: initial; font-size: 10pt; text-align: center; border-width: 1px; border-style: solid; border-color: windowtext black windowtext windowtext; width: 720px;"><input type="date" name="creationDate"/></td>
+                </tr>
+            <!--        <tr>-->
+            <!--            <td style="font-weight: bold">소속:</td>-->
+            <!--            <td><input type="text" name="department"/></td>-->
+            <!--        </tr>-->
+                <tr>
+                    <td height="30" width="72" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; font-family: &quot;맑은 고딕&quot;, monospace; vertical-align: middle; text-align: center; border: 1px solid windowtext; height: 30px; width: 150px; background-color: rgb(226, 226, 226);"><strong style="font-size: 9pt;">작성자</strong></td>
+                    <td colspan="12" width="760" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; font-family: &quot;맑은 고딕&quot;, monospace; vertical-align: middle; border-image: initial; font-size: 10pt; text-align: center; border-width: 1px; border-style: solid; border-color: windowtext black windowtext windowtext; width: 720px;"><input type="text" name="author" th:value="${#strings.toString(authInfo.emp_num)}" readonly/></td>
+                </tr>
+                <tr>
+                    <td height="30" width="72" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; font-family: &quot;맑은 고딕&quot;, monospace; vertical-align: middle; text-align: center; border: 1px solid windowtext; height: 30px; width: 150px; background-color: rgb(226, 226, 226);"><strong style="font-size: 9pt;">내용</strong></td>
+                    <td colspan="12" width="760" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; font-family: &quot;맑은 고딕&quot;, monospace; vertical-align: middle; border-image: initial; font-size: 10pt; text-align: center; border-width: 1px; border-style: solid; border-color: windowtext black windowtext windowtext; width: 720px;"><textarea name="content" rows="4"></textarea></td>
+                </tr>
+                <tr>
+            <!--            <td style="font-weight: bold">문서번호:</td>-->
+                    <td><input type="text" th:value="2" name="documentNum" th:id="documentNum" readonly/></td>
+                </tr>
+            </table>
+        </div>
+    <hr>
+    <p><input type="button" th:value="제출" id="pageSubmit" style="float: right; margin-top: 15px; width:120px;"></p>
+    </form>
+</div>
+<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+
+document.addEventListener("DOMContentLoaded", function() {
+    var documentNumElement = document.getElementById("documentNum");
+    documentNumElement.style.display = "none";
+});
+
+$('#deptPick').change(function (){
+    $('.optionClass').css('display', 'none');
+    $('.empSelBox').val('pickMe').prop('selected', true);
+    var deptNo = $(this).val();
+
+    $('.optionClass').each(function (){
+        if ($(this).data('deptnum') == deptNo) {
+            $(this).css('display', '');
+        }
+    });
+});
+
+$('#addPerson').click(function (){
+    var deptNameSel = $('#deptPick option:selected').text();
+    var empName = $('.empSelBox option:selected').text();
+    var empNoSel = $('.empSelBox option:selected').data('empnum');
+    if (empName == "선택하세요") {
+        alert("사원을 선택하세요");
+    } else {
+        $('#addPersonDiv').append("<div  style='text-align: center; width: 120px;'>결재 <input data-empnosel="+empNoSel+" type=\"text\" value='"+empName+"("+deptNameSel+")"+"' readonly style='text-align: center; width: 100px;padding: 2px; margin: 3px 0; border: 1px solid #fffefe; font-size: 12px;'>" +
+            "      <input class='addPersonBtnClass' type='button' value='삭제' style='margin: auto; display: block; width: 100px; font-size:13px;' /><br></div>");
+    }
+});
+
+$(document).on("click", ".addPersonBtnClass", function(){
+    $(this).parent('div').remove();
+});
+
+function hasDuplicates(array) {
+    return array.filter((value, index) => array.indexOf(value) !== index).length > 0;
+}
+
+$(document).on("click", "#pageSubmit", function (){
+    if (confirm("제출하시겠습니까?")) {
+
+        var empNoDataArray1 = [];
+        $('#addPersonDiv div').each(function (){
+            var empNoData1 = $(this).children().first().data('empnosel');
+            empNoDataArray1.push(parseInt(empNoData1));
+            console.log(empNoData1);
+
+        });
+
+        const hasDuplicate = hasDuplicates(empNoDataArray1);
+        console.log(hasDuplicate); // true
+        if (hasDuplicate) {
+            alert("결재선에 같은 사람이 여러명 입니다")
+            return false;
+        }
+
+        if (empNoDataArray1.includes(parseInt($("input[name=author]").val()))) {
+            alert("결재선에 내가 포함되어 있습니다");
+            return false;
+        }
+
+        var insertedKey = 0;
+        var basic = {
+            approvalDate : $("input[name=approvalDate]").val(),
+            title : $("input[name=title]").val(),
+            creationDate : $("input[name=creationDate]").val(),
+            empNum : $("input[name=author]").val(),
+            documentNum : $("input[name=documentNum]").val(),
+        }
+        var jsonData = JSON.stringify(basic)
+        $.ajax({
+            data: jsonData,
+            url: "/form/purchaseBasic",
+            type: "POST",
+            contentType: "application/json",
+            success: function (data) {
+                insertedKey = data;
+
+                var empNoDataArray = [];
+                empNoDataArray.push(parseInt(insertedKey));
+                $('#addPersonDiv div').each(function (){
+                    var empNoData = $(this).children().first().data('empnosel');
+                    empNoDataArray.push(parseInt(empNoData));
+                    console.log(empNoData);
+                });
+
+                console.log("---------------------");
+                $.ajax({
+                    data: JSON.stringify({ empNoData: empNoDataArray }),
+                    url: "/form/addPerson",
+                    type: "POST",
+                    contentType: "application/json",
+                    success: function (data) {
+                        console.log(data);
+                        //
+                        // var content = $("textarea[name=content]").val()
+                        //
+                        // $.ajax({
+                        //     data: JSON.stringify(content,insertedKey),
+                        //     url: "/form/addGeneral",
+                        //     type: "POST",
+                        //     contentType: "application/json",
+                        //     success: function (data) {
+                        //         console.log(data);
+                        //     },
+                        //     error: function() {
+                        //         alert("Error occurred");
+                        //     }
+                        // });
+
+
+
+
+
+                        $('#pageForm').submit();
+                    },
+                    error: function() {
+                        alert("2 Error occurred");
+                    }
+                });
+            },
+            error: function() {
+                alert("1 Error occurred");
+            }
+        });
+    } else {
+        return false;
+    }
+
+});
+
+</script>
+</div>
+</body>
+</html>

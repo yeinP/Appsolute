@@ -5,10 +5,10 @@
 
 <mapper namespace="com.solution.appsolute.mail.dao.mapper.MailMapper">
     <select id="listDao" resultType="java.util.Map">
-        select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content, mail_Date
+        select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content, DATE_FORMAT(mail_Date, '%Y-%m-%d %H:%i:%S') as mail_Date
         from mail m inner join employee e on m.mail_receiver = e.emp_num where mail_sender = #{param1}
         union
-        select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content, mail_Date
+        select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content, DATE_FORMAT(mail_Date, '%Y-%m-%d %H:%i:%S') as mail_Date
         from mail m inner join employee e on m.mail_sender = e.emp_num where mail_receiver = #{param1}
         order by mail_num desc limit #{param2}, #{param3};
     </select>
@@ -16,20 +16,18 @@
     <select id="countDao" resultType="Integer">
         SELECT COUNT(*) as total_count
         FROM (
-                 select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content, mail_Date
+                 select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content,  DATE_FORMAT(mail_Date, '%Y-%m-%d %H:%i:%S') as mail_Date
                  from mail m inner join employee e on m.mail_receiver = e.emp_num where mail_sender = #{param1}
                  union
-                 select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content, mail_Date
+                 select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content, DATE_FORMAT(mail_Date, '%Y-%m-%d %H:%i:%S') as mail_Date
                  from mail m inner join employee e on m.mail_sender = e.emp_num where mail_receiver = #{param1}
                  order by mail_num desc limit #{param2}, #{param3}
              ) AS combined_result;
     </select>
 
     <select id="unreadDao" resultType="java.util.Map">
-        select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content, mail_Date
-        from mail m inner join employee e on m.mail_receiver = e.emp_num where mail_sender = #{param1} and mail_check = 0
-        union
-        select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content, mail_Date
+
+        select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content, DATE_FORMAT(mail_Date, '%Y-%m-%d %H:%i:%S') as mail_Date
         from mail m inner join employee e on m.mail_sender = e.emp_num where mail_receiver = #{param1} and mail_check = 0
         order by mail_num desc limit #{param2}, #{param3};
     </select>
@@ -38,11 +36,40 @@
         SELECT COUNT(*) as total_count
         FROM (
                  select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content, mail_Date
-                 from mail m inner join employee e on m.mail_receiver = e.emp_num where mail_sender = #{param1} and mail_check = 0
-                 union
-                 select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content, mail_Date
                  from mail m inner join employee e on m.mail_sender = e.emp_num where mail_receiver = #{param1} and mail_check = 0
-                 order by mail_num desc limit #{param2}, #{param3}
+
+             ) AS combined_result;
+    </select>
+    <delete id="deleteById">
+        delete from mail where mail_Num = #{param1};
+    </delete>
+
+    <select id="findByMailReceiveLikeEmp" resultType="java.util.Map">
+        select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content, DATE_FORMAT(mail_Date, '%Y-%m-%d %H:%i:%S') as mail_Date
+        from mail m inner join employee e on m.mail_receiver = e.emp_num where mail_sender = #{param1} and mail_receiver = #{param4}
+        union
+        select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content, DATE_FORMAT(mail_Date, '%Y-%m-%d %H:%i:%S') as mail_Date
+        from mail m inner join employee e on m.mail_sender = e.emp_num where mail_receiver = #{param1} and mail_sender = #{param4}
+        order by mail_num desc limit #{param2}, #{param3};
+    </select>
+
+    <select id="findByMailLikeName" resultType="String">
+        select e.emp_name from employee e inner join mail m
+        on m.mail_receiver = e.emp_num where mail_sender = #{param1} and mail_receiver = #{param2}
+        union
+        select e.emp_name from employee e inner join mail m
+        on m.mail_sender = e.emp_num
+        where mail_receiver = #{param1} and mail_sender = #{param2} ;
+    </select>
+
+    <select id="countLikeEmp" resultType="Integer">
+        SELECT COUNT(*) as total_count
+        FROM (
+                 select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content, DATE_FORMAT(mail_Date, '%Y-%m-%d %H:%i:%S') as mail_Date
+                 from mail m inner join employee e on m.mail_receiver = e.emp_num where mail_sender = #{param1} and mail_receiver = #{param2}
+                 union
+                 select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content, DATE_FORMAT(mail_Date, '%Y-%m-%d %H:%i:%S') as mail_Date
+                 from mail m inner join employee e on m.mail_sender = e.emp_num where mail_receiver = #{param1} and mail_sender = #{param2}
              ) AS combined_result;
     </select>
 

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <title>EmployeeInfo</title>
+    <style>
+
+        .employeeInfo-text {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .employeeInfo-table {
+            border-collapse: collapse;
+            width: 50%;
+            margin: auto;
+        }
+
+        .employeeInfo-table th, .employeeInfo-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .employeeInfo-table tr {
+            background-color: #ffffff;
+        }
+
+        .employeeInfo-table tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+
+        .employeeInfo-table tbody tr:hover {
+            background-color: #ececec; /* 원하는 배경색 지정 */
+        }
+
+        /*.container {*/
+        /*    background-color: ghostwhite;*/
+        /*    border-radius: 5px;*/
+        /*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+        /*    padding: 20px;}*/
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container"  style="margin-top: 100px">
+        <div class="title" style="display: flex;    align-items: center;">
+        <h1 class="centered-text" style="font-weight: bold">회원정보</h1>
+        <button style="border: 1px solid #565656; margin-left: 10px;">
+            <a th:href="@{/admin/employee/employeeList}" style=" color: #565656; text-decoration: none">사원 목록</a>
+        </button>
+        </div>
+        <hr>
+        <br>
+
+    <table class="employeeInfo-table" border="1" th:object="${employeeInfo}">
+        <tr>
+            <td class="employeeInfo-text" style="background-color: lightgray">사원 번호</td>
+            <td th:text="*{empNum}" id="empNum" name="empNum"></td>
+        </tr>
+        <tr>
+            <td class="employeeInfo-text" style="background-color: lightgray">사원 이름</td>
+            <td th:text="*{empName}"></td>
+        </tr>
+        <tr>
+            <td class="employeeInfo-text" style="background-color: lightgray">부서 번호</td>
+            <td th:text="*{deptNo}"></td>
+        </tr>
+        <tr>
+            <td class="employeeInfo-text" style="background-color: lightgray">전화번호</td>
+            <td th:text="*{empPhone}"></td>
+        </tr>
+        <tr>
+            <td class="employeeInfo-text" style="background-color: lightgray">입사일</td>
+            <td th:text="${#temporals.format(employeeInfo.empHireDate, 'yyyy-MM-dd')}"></td>
+        </tr>
+        <tr>
+            <td class="employeeInfo-text" style="background-color: lightgray">직책</td>
+            <td th:text="*{empPosition}"></td>
+        </tr>
+    </table>
+        <br>
+        <hr>
+        <div class="btnList" style="float:right;">
+        <button class="btn btn-primary">
+            <a th:href="@{/admin/employee/employeeInfoModify/{empNum}(empNum=${empNum})}" style=" color: #565656; text-decoration: none">정보 수정</a>
+        </button>
+        <button class="btn btn-primary">
+            <a th:href="@{/admin/employee/employeeDeptPositionUpdate/{empNum}(empNum=${empNum})}" style=" color: #565656; text-decoration: none">부서 및 직급 변경</a>
+        </button>
+
+        <button class="btn btn-danger" onclick="confirmResign()">퇴사</button>
+        </div>
+
+    </div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function confirmResign() {
+        const empNum = document.getElementById('empNum').textContent;
+        if (confirm("퇴사 처리하시겠습니까?")) {
+            $.ajax({
+                url: '/admin/employee/employeeResign',
+                type: 'POST',
+                data: {empNum:empNum},
+                success: function (data) {
+                    if (data) {
+                        alert("퇴사 처리가 완료되었습니다.");
+                        window.location.href = '/admin/employee/employeeList';
+
+                    }
+                },
+            });
+        } else {
+            return false;
+        }
+    }
+</script>
+</div>
+</body>
+</html>

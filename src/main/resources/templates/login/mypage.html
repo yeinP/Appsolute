@@ -1,361 +1,452 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="/css/mypage.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Mypage</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.css' rel='stylesheet' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/locales-all.min.js'></script>
+
+    <style>
+
+        #modal.modal-overlay {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(1.5px);
+            -webkit-backdrop-filter: blur(1.5px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        #modal .modal-window {
+            background: rgba( 35, 184, 116, 0.75 );
+            box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+            backdrop-filter: blur( 13.5px );
+            -webkit-backdrop-filter: blur( 13.5px );
+            border-radius: 10px;
+            border: 1px solid rgba( 255, 255, 255, 0.18 );
+            width: 400px;
+            height: 400px;
+            position: relative;
+            top: -440px;
+            padding: 10px;
+        }
+        #modal .title {
+            padding-left: 10px;
+            display: inline;
+            text-shadow: 1px 1px 2px gray;
+            color: white;
+
+        }
+        #modal .title h2 {
+            display: inline;
+        }
+        #modal .close-area {
+            display: inline;
+            float: right;
+            padding-right: 10px;
+            cursor: pointer;
+            text-shadow: 1px 1px 2px gray;
+            color: white;
+        }
+
+        #modal .content {
+            margin-top: 20px;
+            padding: 0px 10px;
+        }
+
+        .search-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-left: 10%;
+        }
+
+        .search-table th, .search-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .search-table tbody tr:hover {
+            background-color: #ececec; /* 원하는 배경색 지정 */
+        }
+
+        .search input[type="text"] {
+            border-radius: 10px; /* 원하는 동글동글한 정도에 따라 값을 조정하세요 */
+            padding: 5px; /* 내용과 경계 사이의 간격을 조정하세요 */
+            border: 2px solid #ccc; /* 테두리 스타일 및 색상을 원하는대로 변경하세요 */
+            width: 400px;
+        }
+        #modal .modal-window .content form{
+            margin-top: 50px;
+        }
+
+        #modal .modal-window .content form tr{
+            background-color: #f0ffea;
+             FONT-VARIANT: JIS83;
+            width: 35%;
+            text-align: center;
+        }
+        #modal .modal-window .content form tr td{
+            background-color: #ffffff;
+        }
+        #btn-success {
+            float: right;
+            margin: 10px 45px;
+            background-color: honeydew;
+            border: 0px;
+            color: black;
+        }
+        .fc .fc-button-primary {
+            color: #726f6f;
+            background-color: #bdeaaa;
+            border-color: #bdeaaa;
+        }
+    </style>
+
 </head>
-<body>
-<p>${authInfo.emp_name}님환영합니다.</p>
-<aside class="sidebar position-fixed top-0 left-0 overflow-auto h-100 float-left" id="show-side-navigation1">
-    <i class="uil-bars close-aside d-md-none d-lg-none" data-close="show-side-navigation1"></i>
-    <div class="sidebar-header d-flex justify-content-center align-items-center px-3 py-4">
-        <img
-                class="rounded-pill img-fluid"
-                width="65"
-                src="https://uniim1.shutterfly.com/ng/services/mediarender/THISLIFE/021036514417/media/23148907008/medium/1501685726/enhance"
-                alt="">
-        <div class="ms-2">
-            <h5 class="fs-6 mb-0">
-                <a class="text-decoration-none" href="#">Jone Doe</a>
-            </h5>
-            <p class="mt-1 mb-0">Lorem ipsum dolor sit amet consectetur.</p>
-        </div>
-    </div>
+<body class="sb-nav-fixed">
 
-    <div class="search position-relative text-center px-4 py-3 mt-2">
-        <input type="text" class="form-control w-100 border-0 bg-transparent" placeholder="Search here">
-        <i class="fa fa-search position-absolute d-block fs-6"></i>
-    </div>
-
-    <ul class="categories list-unstyled">
-        <li class="has-dropdown">
-            <i class="uil-estate fa-fw"></i><a href="#"> Dashboard</a>
-            <ul class="sidebar-dropdown list-unstyled">
-                <li><a href="#">Lorem ipsum</a></li>
-                <li><a href="#">ipsum dolor</a></li>
-                <li><a href="#">dolor ipsum</a></li>
-                <li><a href="#">amet consectetur</a></li>
-                <li><a href="#">ipsum dolor sit</a></li>
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <!-- Navbar Brand-->
+    <a class="navbar-brand ps-3" href="/login/mypage">[[${userName}]]님</a>
+    <!-- Sidebar Toggle-->
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+    <!-- Navbar Search-->
+    <!--                <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">-->
+    <!--                    <div class="input-group">-->
+    <!--                        <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />-->
+    <!--                        <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>-->
+    <!--                    </div>-->
+    <!--                </form>-->
+    <!-- Navbar-->
+    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+<!--                <li><a class="dropdown-item" th:href="@{/employee/employeeInfoModify/{empNum}(empNum=${empNum})}">회원 정보 수정</a></li>-->
+                <li><button class="dropdown-item" id="btn-modal">회원 정보 수정</button></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item"  onclick="confirmLogout()">로그아웃</a></li >
             </ul>
-        </li>
-        <li class="">
-            <i class="uil-folder"></i><a href="#"> File manager</a>
-        </li>
-        <li class="has-dropdown">
-            <i class="uil-calendar-alt"></i><a href="#"> Calender</a>
-            <ul class="sidebar-dropdown list-unstyled">
-                <li><a href="#">Lorem ipsum</a></li>
-                <li><a href="#">ipsum dolor</a></li>
-                <li><a href="#">dolor ipsum</a></li>
-                <li><a href="#">amet consectetur</a></li>
-                <li><a href="#">ipsum dolor sit</a></li>
-            </ul>
-        </li>
-        <li class="has-dropdown">
-            <i class="uil-envelope-download fa-fw"></i><a href="#"> Mailbox</a>
-            <ul class="sidebar-dropdown list-unstyled">
-                <li><a href="#">Lorem ipsum</a></li>
-                <li><a href="#">ipsum dolor</a></li>
-                <li><a href="#">dolor ipsum</a></li>
-                <li><a href="#">amet consectetur</a></li>
-                <li><a href="#">ipsum dolor sit</a></li>
-            </ul>
-        </li>
-        <li class="has-dropdown">
-            <i class="uil-shopping-cart-alt"></i><a href="#"> Ecommerce</a>
-            <ul class="sidebar-dropdown list-unstyled">
-                <li><a href="#">Lorem ipsum</a></li>
-                <li><a href="#">ipsum dolor</a></li>
-                <li><a href="#">dolor ipsum</a></li>
-                <li><a href="#">amet consectetur</a></li>
-                <li><a href="#">ipsum dolor sit</a></li>
-            </ul>
-        </li>
-        <li class="has-dropdown">
-            <i class="uil-bag"></i><a href="#"> Projects</a>
-            <ul class="sidebar-dropdown list-unstyled">
-                <li><a href="#">Lorem ipsum</a></li>
-                <li><a href="#">ipsum dolor</a></li>
-                <li><a href="#">dolor ipsum</a></li>
-                <li><a href="#">amet consectetur</a></li>
-                <li><a href="#">ipsum dolor sit</a></li>
-            </ul>
-        </li>
-        <li class="">
-            <i class="uil-setting"></i><a href="#"> Settings</a>
-            <ul class="sidebar-dropdown list-unstyled">
-                <li><a href="#">Lorem ipsum</a></li>
-                <li><a href="#">ipsum dolor</a></li>
-                <li><a href="#">dolor ipsum</a></li>
-                <li><a href="#">amet consectetur</a></li>
-                <li><a href="#">ipsum dolor sit</a></li>
-            </ul>
-        </li>
-        <li class="has-dropdown">
-            <i class="uil-chart-pie-alt"></i><a href="#"> Components</a>
-            <ul class="sidebar-dropdown list-unstyled">
-                <li><a href="#">Lorem ipsum</a></li>
-                <li><a href="#">ipsum dolor</a></li>
-                <li><a href="#">dolor ipsum</a></li>
-                <li><a href="#">amet consectetur</a></li>
-                <li><a href="#">ipsum dolor sit</a></li>
-            </ul>
-        </li>
-        <li class="has-dropdown">
-            <i class="uil-panel-add"></i><a href="#"> Charts</a>
-            <ul class="sidebar-dropdown list-unstyled">
-                <li><a href="#">Lorem ipsum</a></li>
-                <li><a href="#">ipsum dolor</a></li>
-                <li><a href="#">dolor ipsum</a></li>
-                <li><a href="#">amet consectetur</a></li>
-                <li><a href="#">ipsum dolor sit</a></li>
-            </ul>
-        </li>
-        <li class="">
-            <i class="uil-map-marker"></i><a href="#"> Maps</a>
         </li>
     </ul>
-</aside>
+</nav>
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <div class="sb-sidenav-menu-heading">Approval</div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                        <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                        결재
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
+                                결재 올리기
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="/approval/purchase">지출 결의서</a>
+                                    <a class="nav-link" href="/approval/general">일반 기안서</a>
+<!--                                    <a class="nav-link" href="password.html">결재3</a>-->
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
+                                결재 서류
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+<!--                                    <a class="nav-link" href="401.html">확인된거</a>-->
+                                    <a class="nav-link" href="/approval/receivedApproval">받은 결제</a>
+                                    <a class="nav-link" href="/approval/myApproval">내가 올린 결재</a>
+                                </nav>
+                            </div>
+                        </nav>
+                    </div>
 
-<section id="wrapper">
-    <nav class="navbar navbar-expand-md">
-        <div class="container-fluid mx-2">
-            <div class="navbar-header">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#toggle-navbar" aria-controls="toggle-navbar" aria-expanded="false" aria-label="Toggle navigation">
-                    <i class="uil-bars text-white"></i>
-                </button>
-                <a class="navbar-brand" href="#">admin<span class="main-color">kit</span></a>
-            </div>
-            <div class="collapse navbar-collapse" id="toggle-navbar">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Settings
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li>
-                                <a class="dropdown-item" href="#">My account</a>
-                            </li>
-                            <li><a class="dropdown-item" href="#">My inbox</a>
-                            </li>
-                            <li><a class="dropdown-item" href="#">Help</a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Log out</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="uil-comments-alt"></i><span>23</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="uil-bell"></i><span>98</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i data-show="show-side-navigation1" class="uil-bars show-side-btn"></i>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+                    <div class="sb-sidenav-menu-heading">Mail</div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                        메시지
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="/mail">전체 메시지</a>
+                            <a class="nav-link" href="/mail/send">보낸 메시지</a>
+                            <a class="nav-link" href="/mail/receive">받은 메시지</a>
+                            <a class="nav-link" href="/mail/unread">읽지 않은 메시지</a>
+                            <a class="nav-link" href="/mail/write">메시지 작성</a>
+                        </nav>
+                    </div>
 
-    <div class="p-4">
-        <div class="welcome">
-            <div class="content rounded-3 p-3">
-                <h1 class="fs-3">Welcome to Dashboard</h1>
-                <p class="mb-0">Hello Jone Doe, welcome to your awesome dashboard!</p>
-            </div>
-        </div>
+                    <div class="sb-sidenav-menu-heading">notification </div>
+                    <a class="nav-link" href="/board/boardList">
+                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                        공지사항
+                    </a>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapse" aria-expanded="false" aria-controls="collapse"  th:if="${userName.equals('관리자')}" >
+                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                        관리자
 
-        <section class="statistics mt-4">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="box d-flex rounded-2 align-items-center mb-4 mb-lg-0 p-3">
-                        <i class="uil-envelope-shield fs-2 text-center bg-primary rounded-circle"></i>
-                        <div class="ms-3">
-                            <div class="d-flex align-items-center">
-                                <h3 class="mb-0">1,245</h3> <span class="d-block ms-2">Emails</span>
-                            </div>
-                            <p class="fs-normal mb-0">Lorem ipsum dolor sit amet</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="box d-flex rounded-2 align-items-center mb-4 mb-lg-0 p-3">
-                        <i class="uil-file fs-2 text-center bg-danger rounded-circle"></i>
-                        <div class="ms-3">
-                            <div class="d-flex align-items-center">
-                                <h3 class="mb-0">34</h3> <span class="d-block ms-2">Projects</span>
-                            </div>
-                            <p class="fs-normal mb-0">Lorem ipsum dolor sit amet</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="box d-flex rounded-2 align-items-center p-3">
-                        <i class="uil-users-alt fs-2 text-center bg-success rounded-circle"></i>
-                        <div class="ms-3">
-                            <div class="d-flex align-items-center">
-                                <h3 class="mb-0">5,245</h3> <span class="d-block ms-2">Users</span>
-                            </div>
-                            <p class="fs-normal mb-0">Lorem ipsum dolor sit amet</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
 
-        <section class="charts mt-4">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="chart-container rounded-2 p-3">
-                        <h3 class="fs-6 mb-3">Chart title number one</h3>
-                        <canvas id="myChart"></canvas>
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapse" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="/admin/employee/employeeList">사원 관리</a>
+                            <a class="nav-link" href="/admin/dept/deptList">부서 관리</a>
+                            <a class="nav-link" href="/admin/annual/annualList">휴가 관리</a>
+                        </nav>
                     </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="chart-container rounded-2 p-3">
-                        <h3 class="fs-6 mb-3">Chart title number two</h3>
-                        <canvas id="myChart2"></canvas>
-                    </div>
-                </div>
-            </div>
-        </section>
 
-        <section class="admins mt-4">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="box">
-                        <!-- <h4>Admins:</h4> -->
-                        <div class="admin d-flex align-items-center rounded-2 p-3 mb-4">
-                            <div class="img">
-                                <img class="img-fluid rounded-pill"
-                                     width="75" height="75"
-                                     src="https://uniim1.shutterfly.com/ng/services/mediarender/THISLIFE/021036514417/media/23148906966/small/1501685402/enhance"
-                                     alt="admin">
-                            </div>
-                            <div class="ms-3">
-                                <h3 class="fs-5 mb-1">Joge Lucky</h3>
-                                <p class="mb-0">Lorem ipsum dolor sit amet consectetur elit.</p>
-                            </div>
-                        </div>
-                        <div class="admin d-flex align-items-center rounded-2 p-3 mb-4">
-                            <div class="img">
-                                <img class="img-fluid rounded-pill"
-                                     width="75" height="75"
-                                     src="https://uniim1.shutterfly.com/ng/services/mediarender/THISLIFE/021036514417/media/23148907137/small/1501685404/enhance"
-                                     alt="admin">
-                            </div>
-                            <div class="ms-3">
-                                <h3 class="fs-5 mb-1">Joge Lucky</h3>
-                                <p class="mb-0">Lorem ipsum dolor sit amet consectetur elit.</p>
-                            </div>
-                        </div>
-                        <div class="admin d-flex align-items-center rounded-2 p-3">
-                            <div class="img">
-                                <img class="img-fluid rounded-pill"
-                                     width="75" height="75"
-                                     src="https://uniim1.shutterfly.com/ng/services/mediarender/THISLIFE/021036514417/media/23148907019/small/1501685403/enhance"
-                                     alt="admin">
-                            </div>
-                            <div class="ms-3">
-                                <h3 class="fs-5 mb-1">Joge Lucky</h3>
-                                <p class="mb-0">Lorem ipsum dolor sit amet consectetur elit.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="box">
-                        <!-- <h4>Moderators:</h4> -->
-                        <div class="admin d-flex align-items-center rounded-2 p-3 mb-4">
-                            <div class="img">
-                                <img class="img-fluid rounded-pill"
-                                     width="75" height="75"
-                                     src="https://uniim1.shutterfly.com/ng/services/mediarender/THISLIFE/021036514417/media/23148907114/small/1501685404/enhance"
-                                     alt="admin">
-                            </div>
-                            <div class="ms-3">
-                                <h3 class="fs-5 mb-1">Joge Lucky</h3>
-                                <p class="mb-0">Lorem ipsum dolor sit amet consectetur elit.</p>
-                            </div>
-                        </div>
-                        <div class="admin d-flex align-items-center rounded-2 p-3 mb-4">
-                            <div class="img">
-                                <img class="img-fluid rounded-pill"
-                                     width="75" height="75"
-                                     src="https://uniim1.shutterfly.com/ng/services/mediarender/THISLIFE/021036514417/media/23148907086/small/1501685404/enhance"
-                                     alt="admin">
-                            </div>
-                            <div class="ms-3">
-                                <h3 class="fs-5 mb-1">Joge Lucky</h3>
-                                <p class="mb-0">Lorem ipsum dolor sit amet consectetur elit.</p>
-                            </div>
-                        </div>
-                        <div class="admin d-flex align-items-center rounded-2 p-3">
-                            <div class="img">
-                                <img class="img-fluid rounded-pill"
-                                     width="75" height="75"
-                                     src="https://uniim1.shutterfly.com/ng/services/mediarender/THISLIFE/021036514417/media/23148907008/medium/1501685726/enhance"
-                                     alt="admin">
-                            </div>
-                            <div class="ms-3">
-                                <h3 class="fs-5 mb-1">Joge Lucky</h3>
-                                <p class="mb-0">Lorem ipsum dolor sit amet consectetur elit.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+<!--                     번역-->
+                    <div class="sb-sidenav-menu-heading">다국어 번역 </div>
+                    <div class="gtranslate_wrapper" style="margin-left: 20px"></div>
+                    <script>window.gtranslateSettings = {"default_language":"ko","native_language_names":true,"detect_browser_language":true,"languages":["ko","en","zh-CN","ja"],"wrapper_selector":".gtranslate_wrapper","alt_flags":{"en":"usa"}}</script>
+                    <script src="https://cdn.gtranslate.net/widgets/latest/flags.js" defer></script>
 
-        <section class="statis mt-4 text-center">
-            <div class="row">
-                <div class="col-md-6 col-lg-3 mb-4 mb-lg-0">
-                    <div class="box bg-primary p-3">
-                        <i class="uil-eye"></i>
-                        <h3>5,154</h3>
-                        <p class="lead">Page views</p>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3 mb-4 mb-lg-0">
-                    <div class="box bg-danger p-3">
-                        <i class="uil-user"></i>
-                        <h3>245</h3>
-                        <p class="lead">User registered</p>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3 mb-4 mb-md-0">
-                    <div class="box bg-warning p-3">
-                        <i class="uil-shopping-cart"></i>
-                        <h3>5,154</h3>
-                        <p class="lead">Product sales</p>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="box bg-success p-3">
-                        <i class="uil-feedback"></i>
-                        <h3>5,154</h3>
-                        <p class="lead">Transactions</p>
-                    </div>
                 </div>
             </div>
-        </section>
-
-        <section class="charts mt-4">
-            <div class="chart-container p-3">
-                <h3 class="fs-6 mb-3">Chart title number three</h3>
-                <div style="height: 300px">
-                    <canvas id="chart3" width="100%"></canvas>
-                </div>
-            </div>
-        </section>
+        </nav>
     </div>
-</section>
-<a href="/logout"><button>로그아웃</button></a>
-<script src="mypage.js"></script>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <!-- <h1 class="mt-4">Dashboard</h1> !-->
+                <img src="/image/appsolute.png" alt="Your Image" class="dashboard-image">
+                <ol class="breadcrumb mb-4"></ol>
+                <div class="row">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-success text-black mb-4">
+                            <div class="card-body">공지사항</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-black stretched-link" href="/board/boardList"  style="text-decoration: none;">View Details</a>
+                                <div class="small text-black"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-warning text-black mb-4">
+                            <div class="card-body"  >
+                                안 읽은 메시지 [[${mailTotal}]]건
+                            </div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-black stretched-link" href="/mail/unread" style="text-decoration: none;">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-success text-black mb-4">
+                            <div class="card-body">받은 결재 서류</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-black stretched-link" href="/approval/receivedApproval"  style="text-decoration: none;">View Details</a>
+                                <div class="small text-black"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-danger text-black mb-4">
+                            <div class="card-body">내가 올린 결재 서류</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-black stretched-link" href="/approval/myApproval"  style="text-decoration: none;">View Details</a>
+                                <div class="small text-black"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-chart-area me-1"></i>
+                                일정 관리
+                            </div>
+                            <div id='calendar-container' style="padding: 5px;">
+                                <div id='calendar'></div>
+                        </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-xl-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-2"></i>
+                                사원 검색
+                            </div>
+                            <div class="card-body"  style="overflow-y: scroll; height: 500px;">
+                                <!--                                사원검색창 만들기-->
+                                <form action="/login/search" style="margin-left: 17%">
+                                    <div class="search" style="display: flex; align-items: center;">
+                                        <input name="keyword" type="text" placeholder="사원이름을 입력해주세요">
+                                        <button class="btn btn-primary" style="margin-left: 10px;">검색하기</button>
+                                    </div>
+                                </form>
+                                <br>
+                                <table class="search-table" border="1" style="width: 600px;">
+                                    <tr style="background-color: lightgray">
+                                        <th>사원 번호</th>
+                                        <th>사원 이름</th>
+                                        <th>사원 부서</th>
+                                        <th>직책</th>
+                                    </tr>
+                                    <tr>
+                                    <tr th:each="emp :${empList}">
+                                        <td th:text="${emp.emp_num}"></td>
+                                        <td th:text="${emp.emp_name}"></td>
+                                        <td th:text="${emp.dept_no + ' ' + emp.dept_name}"></td>
+                                        <td th:text="${emp.emp_position}"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table me-1"></i>
+                        공지사항
+                    </div>
+                    <div class="card-body">
+                        <table class="search-table" border="1" style="width: 1300px;">
+                            <tr style="background-color: lightgray">
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>작성자</th>
+                                <th>날짜</th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td><a href="/board/boardContent/107">[공지] 인사 이동</a></td>
+                                <td>관리자</td>
+                                <td>2023/10/11</td>
+
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><a href="/board/boardContent/108">[주의] 랜섬웨어 URL 주의</a></td>
+                                <td>관리자</td>
+                                <td>2023/10/08</td>
+
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td><a href="/board/boardContent/109">[안내] 사내 워크샵 세부 일정 안내</a></td>
+                                <td>관리자</td>
+                                <td>2023/10/04</td>
+
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td><a href="/board/boardContent/110">[시스템 점검 공지] 10/21(토) AM 01시-05시</a></td>
+                                <td>관리자</td>
+                                <td>2023/09/25</td>
+
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td><a href="/board/boardContent/111">[안내] 개인정보처리 방침 안내</a></td>
+                                <td>관리자</td>
+                                <td>2023/09/18</td>
+
+                            </tr>
+
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <div id="modal" class="modal-overlay">
+            <div class="modal-window">
+                <div class="title">
+                    <h2>회원 정보 수정</h2>
+                </div>
+                <div class="close-area">X</div>
+                <div class="content">
+                    <form th:action="@{'/login/mypage/InfoModify/' + ${empNum}}" method="post" id="modifyForm">
+                        <table style="border-collapse: separate; margin:auto;">
+                            <tr>
+                                <td class="bold-label" style="background-color: #f0ffea">사원 번호 </td>
+                                <td><input type="hidden"  th:value="${empNum}">[[${empNum}]]</td>
+                            </tr>
+                            <tr>
+                                <td class="bold-label" style="background-color: #f0ffea">사원 이름 </td>
+                                <td><input type="hidden" name="empName" th:value="*{userName}">[[${userName}]]</td>
+                            </tr>
+                            <tr>
+                                <td class="bold-label" style="background-color: #f0ffea">부서 번호 </td>
+                                <td><input type="hidden" th:value="${dept_no}">[[${dept_no}]]</td>
+                            </tr>
+                            <tr>
+                                <td class="bold-label" style="background-color: #f0ffea">전화번호 </td>
+                                <td><input type="text" style="text-align: center;" name="empPhone" th:value="${emp_phone}" id="empPhone"></td>
+                            </tr>
+                            <tr>
+                                <td class="bold-label" style="background-color: #f0ffea">비밀번호 </td>
+                                <td><input type="password" style="text-align: center;" name="empPassword" th:value="${emp_password}" id="empPassword"></td>
+                            </tr>
+                        </table>
+                        <input type="submit" th:value="수정하기" id="btn-success"/>&nbsp;&nbsp;&nbsp;&nbsp;
+                    </form>
+                </div>
+                <div class="add" style="text-align: center; margin:60px; color:white;">
+                    추가로 필요한 정보 변경은<br/>
+                    인사과로 연락 바랍니다.
+                </div>
+            </div>
+        </div>
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid px-4">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; Appsolute 2023</div>
+                    <div>
+                        <a href="#">Privacy Policy</a>
+                        &middot;
+                        <a href="#">Terms &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="/js/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+<script src="/assets/demo/chart-area-demo.js"></script>
+<script src="/assets/demo/chart-bar-demo.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+<script src="/js/datatables-simple-demo.js"></script>
+<script src="/js/logout.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 </body>
 </html>

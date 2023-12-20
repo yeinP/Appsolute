@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/basic.html}">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <title>회원별 정보수정</title>
+    <style>
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin-bottom: 20px;
+        }
+
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ccc;
+        }
+
+        table th {
+            background-color: #f0f0f0;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+        .mail-links a {
+            padding: 10px 30px;
+            text-decoration: none;
+        }
+        /*.container {*/
+        /*    background-color: ghostwhite;*/
+        /*    border-radius: 5px;*/
+        /*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+        /*    padding: 20px;*/
+        /*}*/
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        label {
+            font-weight: bold;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="checkbox"].chBox {
+            width: 15px;
+            height: 15px;
+        }
+        input[type="checkbox"][name="allcheck"] {
+            width: 15px;
+            height: 15px;
+        }
+
+        td.bold-label {
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container"  style="margin-top: 50px">
+        <div class="title" style="display: flex;    align-items: center;">
+        <h1 class="centered-text" style="font-weight: bold">회원 정보 수정</h1>
+            <button style="border: 1px solid #565656; margin-left: 10px;">
+            <a th:href="@{/admin/employee/employeeList}" style=" color: #565656; text-decoration: none">사원 목록</a>
+        </button>
+        </div>
+        <hr>
+        <br>
+
+    <form th:action="@{'/admin/employee/employeeInfoModify/' + ${empNum}}" method="post" th:object="${employeeInfo}">
+        <table style="background-color: white;">
+        <tr>
+            <td class="bold-label" style="background-color: lightgray">사원 번호: </td>
+            <td><input type="hidden"  th:value="*{empNum}">[[${employeeInfo.empNum}]]</td>
+        </tr>
+        <tr>
+            <td class="bold-label" style="background-color: lightgray">사원 이름: </td>
+            <td><input type="text" name="empName" th:value="*{empName}"></td>
+        </tr>
+        <tr>
+            <td class="bold-label" style="background-color: lightgray">부서 번호: </td>
+            <td><input type="hidden" th:value="*{deptNo}">[[${employeeInfo.deptNo}]]</td>
+        </tr>
+        <tr>
+            <td class="bold-label" style="background-color: lightgray">전화번호: </td>
+            <td><input type="text" name="empPhone" th:value="*{empPhone}" id="empPhone"></td>
+        </tr>
+        <tr>
+                <td class="bold-label" style="background-color: lightgray">비밀번호: </td>
+                <td><input type="text" name="empPassword" th:value="*{empPassword}" id="empPassword"></td>
+        </tr>
+        <tr>
+            <td class="bold-label" style="background-color: lightgray">입사일: </td>
+            <td><input type="hidden" th:value="*{empHireDate}">[[${#temporals.format(employeeInfo.empHireDate, 'yyyy-MM-dd')}]]</td>
+        </tr>
+        <tr>
+            <td class="bold-label" style="background-color: lightgray">직책: </td>
+            <td><input type="hidden" th:value="*{empPosition}">[[${employeeInfo.empPosition}]]</td>
+        </tr>
+        </table>
+        <input type="submit" th:value="수정하기" class="btn btn-primary" style="float: right"/>&nbsp;&nbsp;&nbsp;&nbsp;
+
+    </form>
+
+    </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function PhoneConfirm(inputElement) {
+        let phoneNumber = inputElement.value;
+        if (!/^[0-9]+$/.test(phoneNumber)) {
+            alert('전화번호는 숫자로만 입력해주세요.');
+        }
+    }
+
+    document.getElementById('empPhone').addEventListener('blur', function () {
+    let empPhone = document.getElementById('empPhone');
+        if(!PhoneConfirm(this)){
+            inputElement.value='';
+            empPhone.focus();
+        }
+    });
+
+    document.querySelector('input[type="submit"]').addEventListener('click', function (event) {
+        if (confirm('수정하시겠습니까?')) {
+            alert('완료');
+            return true;
+        } else {
+            alert('취소');
+            return false;
+        }
+    });
+</script>
+</div>
+</body>
+</html>

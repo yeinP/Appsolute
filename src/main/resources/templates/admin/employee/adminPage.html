@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        .button-list {
+            margin-top: 170px;
+
+        }
+
+        /*.container {*/
+        /*    background-color: ghostwhite;*/
+        /*    border-radius: 5px;*/
+        /*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+        /*    padding: 20px;}*/
+
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container"  style="margin-top: 100px">
+        <h1 class="centered-text" style="font-weight: bold">인사 관리</h1><br><br>
+
+        <div class="button-list">
+        <button class="btn btn-primary">
+            <a th:href="@{/admin/employee/employeeList}" style="color: white; text-decoration: none; font-size: 2rem">사원관리</a>
+        </button> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+
+        <button class="btn btn-primary">
+        <a th:href="@{/admin/dept/deptList}" style="color: white; text-decoration: none; font-size: 2rem" >부서관리</a>
+        </button> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+
+        <button class="btn btn-primary">
+            <a th:href="@{/admin/annual/annualList}" style="color: white; text-decoration: none; font-size: 2rem">휴가관리</a>
+        </button>
+        </div>
+
+        <div id="content"></div>
+    </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#employeeListButton").click(function() {
+            $.ajax({
+                url: '/admin/employee/employeeList',
+                type: 'GET',
+                success: function(data) {
+                    $("#content").html(data);
+                },
+            });
+        });
+    });
+    $(document).ready(function() {
+        $("#employeeDePtListButton").click(function() {
+            $.ajax({
+                url: '/admin/dept/deptList',
+                type: 'GET',
+                success: function(data) {
+                    $("#content").html(data);
+                },
+            });
+        });
+    });
+</script>
+</div>
+</body>
+</html>

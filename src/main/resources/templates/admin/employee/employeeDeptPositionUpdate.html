@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <title>회원별 정보수정</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin-bottom: 20px;
+        }
+
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ccc;
+        }
+
+        table th {
+            background-color: #f0f0f0;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+        .mail-links a {
+            padding: 10px 30px;
+            text-decoration: none;
+        }
+
+        /*.container {*/
+        /*    background-color: ghostwhite;*/
+        /*    border-radius: 5px;*/
+        /*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+        /*    padding: 20px;*/
+        /*}*/
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        label {
+            font-weight: bold;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="checkbox"].chBox {
+            width: 15px;
+            height: 15px;
+        }
+        input[type="checkbox"][name="allcheck"] {
+            width: 15px;
+            height: 15px;
+        }
+
+        td.bold-label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container"  style="margin-top: 100px">
+        <div class="title" style="display: flex;    align-items: center;">
+        <h1 class="centered-text" style="font-weight: bold">회원 정보 수정</h1>
+        <button style="border: 1px solid #565656; margin-left: 10px;" >
+            <a th:href="@{/admin/employee/employeeList}" style=" color: #565656; text-decoration: none">사원 목록</a>
+        </button>
+        </div>
+        <hr>
+        <br>
+    <form th:action="@{'/admin/employee/employeeDeptPositionUpdate/' + ${empNum}}" method="post" th:object="${employeeInfo}">
+        <table style="background-color: white" border="1">
+        <tr>
+            <td class="bold-label" style="background-color: lightgray">사원 번호</td>
+            <td><input type="hidden"  th:value="*{empNum}">[[${employeeInfo.empNum}]]</td>
+        </tr>
+        <tr>
+            <td class="bold-label" style="background-color: lightgray">사원 이름</td>
+            <td><input type="hidden" name="empName" th:value="*{empName}">[[${employeeInfo.empName}]]</td>
+        </tr>
+        <tr>
+            <td class="bold-label" style="background-color: lightgray">부서</td>
+            <td>
+                <select name="deptNo" id="deptNoSelect">
+                    <option th:value="*{deptNo}">[[${employeeInfo.deptNo}]]</option>
+                    <th:block th:each="deptInfo : ${deptNameList}">
+                        <option th:value="${deptInfo[0]}" th:text="${deptInfo[0]}+ '(' + ${deptInfo[1]} + ')'"></option>
+                    </th:block>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="bold-label" style="background-color: lightgray">전화번호</td>
+            <td><input type="hidden"  th:value="*{empPhone}">[[${employeeInfo.empPhone}]]</td>
+        </tr>
+        <tr>
+            <td class="bold-label" style="background-color: lightgray">입사일</td>
+            <td><input type="hidden" th:value="*{empHireDate}">[[${#temporals.format(employeeInfo.empHireDate, 'yyyy-MM-dd')}]]</td>
+        </tr>
+        <tr>
+            <td class="bold-label" style="background-color: lightgray">직책</td>
+            <td>
+                <select name="empPosition" id="empPosition">
+                    <option th:value="*{empPosition}" name="empPosition" th:text="*{empPosition}"></option>
+                    <option th:value="사원" th:text="사원"></option>
+                    <option th:value="대리" th:text="대리"></option>
+                    <option th:value="팀장" th:text="팀장"></option>
+                    <option th:value="과장" th:text="과장"></option>
+                    <option th:value="차장" th:text="차장"></option>
+                    <option th:value="부장" th:text="부장"></option>
+                    <option th:value="전무" th:text="전무"></option>
+                    <option th:value="대표" th:text="대표"></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="bold-label" style="background-color: lightgray">팀장</td>
+            <td><input type="text" id="empLeader" name="empLeader" th:value="*{empLeader}"></td>
+        </tr>
+        </table>
+        <input type="submit" th:value="수정하기" class="btn btn-primary" style="float: right"/>
+    </form>
+    </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // document.getElementById('deptNoSelect').addEventListener('change', function (){
+    //     let selectDeptNo = this.value;
+    //     let empLeaderSelect = document.getElementById('empLeaderSelect');
+    //     empLeaderSelect.innerHTML="";
+    //     let empMgrSelect = document.getElementById('empMgrSelect')
+    //     empMgrSelect.innerHTML="";
+    //
+    //     $.ajax({
+    //         url: '/admin/employee/getTeamLeaders',
+    //         type: 'GET',
+    //         data: {deptNo: selectDeptNo},
+    //         success: function (data) {
+    //             let leaderSelect = document.getElementById('empLeaderSelect');
+    //             leaderSelect.innerHTML = '<option value=0>선택</option>';
+    //             data.forEach(function (leader) {
+    //                 let option = document.createElement('option');
+    //                 option.value = leader[0];
+    //                 option.text = leader[1] + ' (' + leader[0] + ')';
+    //                 leaderSelect.appendChild(option);
+    //             });
+    //         },
+    //     });
+    //
+    //     $.ajax({
+    //         url: '/admin/employee/getMgr',
+    //         type: 'GET',
+    //         data: {deptNo: selectDeptNo},
+    //         success: function (data) {
+    //             let mgrSelect = document.getElementById('empMgrSelect');
+    //             mgrSelect.innerHTML = '<option value=0>선택</option>';
+    //             data.forEach(function (mgr) {
+    //                 let option = document.createElement('option');
+    //                 option.value = mgr[0];
+    //                 option.text =mgr[1] + ' (' +  mgr[0] + ')';
+    //                 mgrSelect.appendChild(option);
+    //             });
+    //         },
+    //     });
+    //
+    //
+    // });
+
+    document.getElementById('deptNoSelect').addEventListener('change', function () {
+        let selectDeptNo = this.value;
+        let empPosition = document.getElementById('empPosition');
+        empPosition.innerHTML =`
+                <option value="0">선택</option>
+                <option value="사원">사원</option>
+                <option value="대리">대리</option>
+                <option value="팀장">팀장</option>
+                <option value="과장">과장</option>
+                <option value="차장">차장</option>
+                <option value="부장">부장</option>
+                <option value="전무">전무</option>
+                <option value="대표">대표</option>
+            `;
+    });
+
+    document.getElementById('empPosition').addEventListener('input', function () {
+        let selectEmpPosition = this.value;
+        let empLeader = document.getElementById('empLeader');
+
+        if (selectEmpPosition === '팀장') {
+            empLeader.value = 1;
+        } else {
+            empLeader.value = 0;
+        }
+    });
+
+    document.querySelector('input[type="submit"]').addEventListener('click', function (event) {
+        if (confirm('수정하시겠습니까?')) {
+            alert('완료');
+            return true;
+        } else {
+            alert('취소');
+            return false;
+        }
+
+    });
+
+
+
+</script>
+</div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container"  style="margin-top: 50px">
+        <h1 class="centered-text" style="font-weight: bold">일반 기안 발송 성공</h1>
+        <hr>
+        <br>
+
+<table>
+    <th:block th:each="approvalDetail : ${approvalDetailOne}">
+
+        <tr>
+            <td style="font-weight: bold">결재 사원 번호&nbsp;:&nbsp;&nbsp;&nbsp;</td>
+            <td th:text="${approvalDetail.empCheckNum}"></td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold">결재 시퀀스&nbsp;:&nbsp;&nbsp;&nbsp;</td>
+            <td th:text="${approvalDetail.appDetailSeq}"></td>
+        </tr>
+
+        <tr>
+            <td style="font-weight: bold">결재 상태&nbsp;:&nbsp;&nbsp;&nbsp;</td>
+            <td th:text="${approvalDetail.approvalStatus}"></td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold">반려 사유&nbsp;:&nbsp;&nbsp;&nbsp;</td>
+            <td th:text="${approvalDetail.rejectReason}"></td>
+        </tr>
+    </th:block>
+    <br>
+    <hr>
+    <br>
+    <th:block th:each="approvalContent : ${approvalContentOne}">
+
+        <th:block th:text="${approvalContent.fieldKey}"></th:block>
+        <th:block th:text="${approvalContent.fieldValue}"></th:block><br>
+
+    </th:block>
+</table>
+    </div>
+<!--    <th:block th:each="approvalContent : ${approvalContentOne}">-->
+
+<!--            <th:block th:text="${approvalContent.fieldKey}"></th:block>-->
+<!--            <th:block th:text="${approvalContent.fieldValue}"></th:block><br>-->
+
+<!--    </th:block>-->
+
+
+</div>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            margin : 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .annualInfo-table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 500px;
+            height: 100px;
+        }
+        .container {
+            margin-left:20px;
+            margin-right: 20px;
+            padding-left: 20px;
+            padding-right:20px;
+        }
+
+        .annualInfo-table th, .annualInfo-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        /*.annualInfo-table tr {*/
+        /*    background-color: #ffffff;*/
+        /*}*/
+
+        /*.annualInfo-table tr:nth-child(even) {*/
+        /*    background-color: #ffffff;*/
+        /*}*/
+
+        .annualInfo-table tbody tr:hover {
+            background-color: #ececec; /* 원하는 배경색 지정 */
+        }
+
+        form {
+            margin: 0 auto;
+        }
+        label {
+            font-weight: bold;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #bdeaaa;
+            color: #605f5f;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="button"] {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="checkbox"].chBox {
+            width: 15px;
+            height: 15px;
+        }
+        input[type="checkbox"][name="allcheck"] {
+            width: 15px;
+            height: 15px;
+        }
+
+    </style>
+</head>
+<body style="margin: 0 auto">
+<div class="container">
+    <form th:action="@{'/admin/annual/getModifyAnnual'}" method="post" th:object="${employeeInfo}">
+        <table class="annualInfo-table" border="1">
+            <tbody>
+            <tr style="background-color: lightgray">
+                <td>사원 번호</td>
+                <td>사원 이름</td>
+                <td>입사일</td>
+                <td>연차</td>
+            </tr>
+            <tr>
+                <td><input type="hidden" name="empNum" th:value="*{empNum}">[[${employeeInfo.empNum}]]</td>
+                <td><input type="hidden" name="empName" th:value="*{empName}">[[${employeeInfo.empName}]]</td>
+                <td><input type="hidden" th:value="*{empHireDate}">[[${#temporals.format(employeeInfo.empHireDate, 'yyyy-MM-dd')}]]</td>
+                <td>
+                    <input type="number" step="0.5" name="empAnnual" th:value="*{empAnnual}" />
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <br>
+        <div style="float:right;">
+        <input type="submit" class="btn-primary" th:value="수정" id="confirmButton" onclick="confirmAndClose()"></input>
+        <button type="button" id="closeButton" style="display: none" onclick="closeWindow()">닫기</button>
+        <input type="button" value="닫기" onclick="closeWindow()">
+        </div>
+    </form>
+</div>
+
+
+</form>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function confirmAndClose() {
+        var confirmButton = document.getElementById('confirmButton');
+        var closeButton = document.getElementById('closeButton');
+
+        if (confirm('수정하시겠습니까?')) {
+            confirmButton.style.display = 'none';
+            closeButton.style.display = 'block';
+
+            setTimeout(function () {
+                window.close();
+                if (window.opener) {
+                    window.opener.location.href = '/admin/annual/all';
+                }
+            }, 1000);
+        }
+    }
+
+    function closeWindow() {
+        window.close();
+        if (window.opener) {
+            window.opener.location.href = '/admin/annual/all';
+        }
+    }
+</script>
+</body>
+</html>

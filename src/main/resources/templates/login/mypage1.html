@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Mypage</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+    <style>
+
+        #modal.modal-overlay {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(1.5px);
+            -webkit-backdrop-filter: blur(1.5px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        #modal .modal-window {
+            background: rgba( 35, 184, 116, 0.75 );
+            box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+            backdrop-filter: blur( 13.5px );
+            -webkit-backdrop-filter: blur( 13.5px );
+            border-radius: 10px;
+            border: 1px solid rgba( 255, 255, 255, 0.18 );
+            width: 400px;
+            height: 500px;
+            position: relative;
+            top: -100px;
+            padding: 10px;
+        }
+        #modal .title {
+            padding-left: 10px;
+            display: inline;
+            text-shadow: 1px 1px 2px gray;
+            color: white;
+
+        }
+        #modal .title h2 {
+            display: inline;
+        }
+        #modal .close-area {
+            display: inline;
+            float: right;
+            padding-right: 10px;
+            cursor: pointer;
+            text-shadow: 1px 1px 2px gray;
+            color: white;
+        }
+
+        #modal .content {
+            margin-top: 20px;
+            padding: 0px 10px;
+            text-shadow: 1px 1px 2px gray;
+            color: white;
+        }
+
+        .search-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-left: 10%;
+        }
+
+        .search-table th, .search-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .search-table tbody tr:hover {
+            background-color: #ececec; /* 원하는 배경색 지정 */
+        }
+
+        .search input[type="text"] {
+            border-radius: 10px; /* 원하는 동글동글한 정도에 따라 값을 조정하세요 */
+            padding: 5px; /* 내용과 경계 사이의 간격을 조정하세요 */
+            border: 2px solid #ccc; /* 테두리 스타일 및 색상을 원하는대로 변경하세요 */
+            width: 400px;
+        }
+
+    </style>
+
+</head>
+<body class="sb-nav-fixed">
+
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <!-- Navbar Brand-->
+    <a class="navbar-brand ps-3" href="/login/mypage">[[${userName}]]님</a>
+    <!-- Sidebar Toggle-->
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+    <!-- Navbar Search-->
+    <!--                <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">-->
+    <!--                    <div class="input-group">-->
+    <!--                        <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />-->
+    <!--                        <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>-->
+    <!--                    </div>-->
+    <!--                </form>-->
+    <!-- Navbar-->
+    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+<!--                <li><a class="dropdown-item" th:href="@{/employee/employeeInfoModify/{empNum}(empNum=${empNum})}">회원 정보 수정</a></li>-->
+                <li><button class="dropdown-item" id="btn-modal">모달 창 열기 버튼</button></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item"  onclick="confirmLogout()">로그아웃</a></li >
+            </ul>
+        </li>
+    </ul>
+</nav>
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <div class="sb-sidenav-menu-heading">Approval</div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                        <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                        결재
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
+                                결재 올리기
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="/approval/purchase">지출 결의서</a>
+                                    <a class="nav-link" href="/approval/general">일반 기안서</a>
+<!--                                    <a class="nav-link" href="password.html">결재3</a>-->
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
+                                결재 서류
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+<!--                                    <a class="nav-link" href="401.html">확인된거</a>-->
+                                    <a class="nav-link" href="/approval/receivedApproval">받은 결제</a>
+                                    <a class="nav-link" href="/approval/myApproval">내가 올린 결재</a>
+                                </nav>
+                            </div>
+                        </nav>
+                    </div>
+
+                    <div class="sb-sidenav-menu-heading">Mail</div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                        메시지
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="/mail">전체 메시지</a>
+                            <a class="nav-link" href="/mail/send">보낸 메시지</a>
+                            <a class="nav-link" href="/mail/receive">받은 메시지</a>
+                            <a class="nav-link" href="/mail/unread">읽지 않은 메시지</a>
+                            <a class="nav-link" href="/mail/write">메시지 작성</a>
+                        </nav>
+                    </div>
+
+                    <div class="sb-sidenav-menu-heading">notification </div>
+                    <a class="nav-link" href="/board/boardList">
+                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                        공지사항
+                    </a>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapse" aria-expanded="false" aria-controls="collapse"  th:if="${userName.equals('고양이')}" >
+                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                        관리자
+
+
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapse" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="/admin/employee/employeeList">사원 관리</a>
+                            <a class="nav-link" href="/admin/dept/deptList">부서 관리</a>
+                            <a class="nav-link" href="/admin/annual/annualList">휴가 관리</a>
+                        </nav>
+                    </div>
+
+<!--                     번역-->
+                    <div class="sb-sidenav-menu-heading">다국어 번역 </div>
+                    <div class="gtranslate_wrapper" style="margin-left: 20px"></div>
+                    <script>window.gtranslateSettings = {"default_language":"ko","native_language_names":true,"detect_browser_language":true,"languages":["ko","en","zh-CN","ja"],"wrapper_selector":".gtranslate_wrapper","alt_flags":{"en":"usa"}}</script>
+                    <script src="https://cdn.gtranslate.net/widgets/latest/flags.js" defer></script>
+
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <!-- <h1 class="mt-4">Dashboard</h1> !-->
+                <img src="/image/appsolute.png" alt="Your Image" class="dashboard-image">
+                <ol class="breadcrumb mb-4"></ol>
+                <div class="row">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-primary text-white mb-4">
+                            <div class="card-body">공지사항</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link" href="/board/boardList"  style="text-decoration: none;">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-warning text-white mb-4">
+                            <div class="card-body"  >
+                                안 읽은 메시지 [[${mailTotal}]]건
+                            </div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link" href="/mail/unread" style="text-decoration: none;">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-success text-white mb-4">
+                            <div class="card-body">받은 결재 서류</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link" href="/approval/receivedApproval"  style="text-decoration: none;">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-danger text-white mb-4">
+                            <div class="card-body">내가 올린 결재 서류</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link" href="/approval/myApproval"  style="text-decoration: none;">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-chart-area me-1"></i>
+                                중국 환율 <p class="no_today">
+                                <em><!-- no_down(blue), X(black) -->
+                                    <em>
+                                        <span class="no1">1</span><span class="no8">8</span><span class="no5">5</span><span class="jum">.</span><span class="no3">3</span><span class="no1">1</span>
+                                    </em>
+                                </em>
+                                <span class="txt_won">원</span>
+                            </p>
+                            </div>
+                            <div class="card-body" style="height: 310px"><img src="https://ssl.pstatic.net/imgfinance/chart/marketindex/area/month3/FX_CNYKRW.png" width="680" alt="차트" onerror="this.src='https://ssl.pstatic.net/imgstock/chart3/world2008/error_700x243.gif'"></div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-xl-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-2"></i>
+                                사원 검색
+                            </div>
+                            <div class="card-body"  style="overflow-y: scroll; height: 350px;">
+                                <!--                                사원검색창 만들기-->
+                                <form action="/login/search" style="margin-left: 17%">
+                                    <div class="search" style="display: flex; align-items: center;">
+                                        <input name="keyword" type="text" placeholder="사원이름을 입력해주세요">
+                                        <button class="btn btn-primary" style="margin-left: 10px;">검색하기</button>
+                                    </div>
+                                </form>
+                                <br>
+                                <table class="search-table" border="1" style="width: 600px;">
+                                    <tr style="background-color: lightgray">
+                                        <th>사원 번호</th>
+                                        <th>사원 이름</th>
+                                        <th>사원 부서</th>
+                                        <th>직책</th>
+                                    </tr>
+                                    <tr>
+                                    <tr th:each="emp :${empList}">
+                                        <td th:text="${emp.emp_num}"></td>
+                                        <td th:text="${emp.emp_name}"></td>
+                                        <td th:text="${emp.dept_no + ' ' + emp.dept_name}"></td>
+                                        <td th:text="${emp.emp_position}"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table me-1"></i>
+                        공지사항
+                    </div>
+                    <div class="card-body">
+                        <table class="search-table" border="1" style="width: 1300px;">
+                            <tr style="background-color: lightgray">
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>작성자</th>
+                                <th>날짜</th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td><a href="/board/boardContent/107">[공지] 인사 이동</a></td>
+                                <td>관리자</td>
+                                <td>2023/10/11</td>
+
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><a href="/board/boardContent/108">[주의] 랜섬웨어 URL 주의</a></td>
+                                <td>관리자</td>
+                                <td>2023/10/08</td>
+
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td><a href="/board/boardContent/109">[안내] 사내 워크샵 세부 일정 안내</a></td>
+                                <td>관리자</td>
+                                <td>2023/10/04</td>
+
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td><a href="/board/boardContent/110">[시스템 점검 공지] 10/21(토) AM 01시-05시</a></td>
+                                <td>관리자</td>
+                                <td>2023/09/25</td>
+
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td><a href="/board/boardContent/111">[안내] 개인정보처리 방침 안내</a></td>
+                                <td>관리자</td>
+                                <td>2023/09/18</td>
+
+                            </tr>
+
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="modal" class="modal-overlay">
+                <div class="modal-window">
+                    <div class="title">
+                        <h2>회원 정보 수정</h2>
+                    </div>
+                    <div class="close-area">X</div>
+                    <div class="content">
+                        <form th:action="@{'/admin/employee/employeeInfoModify/' + ${empNum}}" method="post" th:object="${employeeInfo}">
+                            <table style="background-color: white;">
+                                <tr>
+                                    <td class="bold-label" style="background-color: lightgray">사원 번호: </td>
+                                    <td><input type="hidden"  th:value="*{empNum}">[[${employeeInfo.empNum}]]</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-label" style="background-color: lightgray">사원 이름: </td>
+                                    <td><input type="text" name="empName" th:value="*{empName}"></td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-label" style="background-color: lightgray">부서 번호: </td>
+                                    <td><input type="hidden" th:value="*{deptNo}">[[${employeeInfo.deptNo}]]</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-label" style="background-color: lightgray">전화번호: </td>
+                                    <td><input type="text" name="empPhone" th:value="*{empPhone}" id="empPhone"></td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-label" style="background-color: lightgray">비밀번호: </td>
+                                    <td><input type="text" name="empPassword" th:value="*{empPassword}" id="empPassword"></td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-label" style="background-color: lightgray">입사일: </td>
+                                    <td><input type="hidden" th:value="*{empHireDate}">[[${#temporals.format(employeeInfo.empHireDate, 'yyyy-MM-dd')}]]</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-label" style="background-color: lightgray">직책: </td>
+                                    <td><input type="hidden" th:value="*{empPosition}">[[${employeeInfo.empPosition}]]</td>
+                                </tr>
+                            </table>
+                            <input type="submit" th:value="수정하기" class="btn btn-success"/>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <button class="btn btn-primary" >
+                                <a th:href="@{/admin/employee/employeeList}" style=" color: white; text-decoration: none">사원 목록으로</a>
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+        </main>
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid px-4">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; Appsolute 2023</div>
+                    <div>
+                        <a href="#">Privacy Policy</a>
+                        &middot;
+                        <a href="#">Terms &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="/js/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+<script src="/assets/demo/chart-area-demo.js"></script>
+<script src="/assets/demo/chart-bar-demo.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+<script src="/js/datatables-simple-demo.js"></script>
+<script src="/js/logout.js"></script>
+</body>
+</html>

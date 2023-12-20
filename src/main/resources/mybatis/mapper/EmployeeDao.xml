@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solution.appsolute.login.mapper.LoginMapper">
+    <select id="selectByEmp_num" resultType="com.solution.appsolute.login.dto.Employee">
+        SELECT * FROM employee WHERE emp_num = #{emp_num}
+    </select>
+
+<!--    2023.10.16-->
+    <select id="myPageListEmp" resultType="com.solution.appsolute.login.dto.MyPageEmpListDto">
+    SELECT
+    e.emp_num,
+    e.emp_name,
+    e.emp_position,
+        e.dept_no,
+    d.dept_name
+    FROM employee e
+    INNER JOIN Dept d ON e.dept_no = d.dept_no;
+    </select>
+
+    <!--    2023.10.18 like문 추가-->
+    <select id="myPageListEmpByName" resultType="com.solution.appsolute.login.dto.MyPageEmpListDto">
+        SELECT
+            e.emp_num,
+            e.emp_name,
+            e.emp_position,
+            e.dept_no,
+            d.dept_name
+        FROM employee e
+                 INNER JOIN Dept d ON e.dept_no = d.dept_no
+        where e.emp_name like concat('%', #{name}, '%');
+    </select>
+
+    <select id="countMyPageListEmp" resultType="Integer">
+        select count(*) as total
+        from ( SELECT
+        e.emp_num,
+        e.emp_name,
+        e.emp_hire_date,
+        e.emp_annual,
+        d.dept_name
+        FROM employee e
+        INNER JOIN Dept d ON e.dept_no = d.dept_no;
+        ) as result ;
+    </select>
+    <!--    2023.10.16-->
+</mapper>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>EmployeeList</title>
+    <style>
+
+        .all-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .all-table th, .all-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /*.all-table tr {*/
+        /*    background-color: #ffffff;*/
+        /*}*/
+
+        /*.all-table tr:nth-child(even) {*/
+        /*    background-color: #ffffff;*/
+        /*}*/
+
+        .all-table tbody tr:hover {
+            background-color: #ececec; /* 원하는 배경색 지정 */
+        }
+
+        form {
+            max-width: 95%;
+            margin: 0 auto;
+        }
+        label {
+            font-weight: bold;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="checkbox"].chBox {
+            width: 15px;
+            height: 15px;
+        }
+        input[type="checkbox"][name="allcheck"] {
+            width: 15px;
+            height: 15px;
+        }
+
+        ul{
+            list-style: none;
+        }
+        li {
+            float: left;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container"  style="margin-top: 50px">
+        <div style="display: flex;    align-items: center;">
+        <h1 class="centered-text" style="font-weight: bold">연차 수정</h1>
+        <button style="border: 1px solid #565656; margin-left: 10px;">
+            <a th:href="@{/admin/annual/annualList}" style=" color: #565656; text-decoration: none">연차 관리</a>
+        </button>
+        </div>
+        <hr>
+        <br>
+<form action = "/admin/annual/all" method="get" id="searchForm">
+    <div class="search" style="display: flex; align-items: center; margin: auto; flex-direction: row; justify-content: flex-end;">
+    <input type = "hidden" name="page" value="1">
+        <lable style="font-size:18px; font-weight: bold; width: 6%;">검색</lable>
+    <select name="type" style="width: 20%">
+        <option value="empName" th:selected="${pageRequestDto.type == 'empName'}">사원 이름</option>
+        <option value="empNum" th:selected="${pageRequestDto.type == 'empNum'}">사원 번호</option>
+    </select>
+
+        <input type="text" style="width: 20%; margin-left: 5px;" id="keyword" name="keyword" th:value="${pageRequestDto.keyword}" placeholder="검색어를 입력하세요">
+        <button class="btn btn-primary btn-search" type="button" style="color: #605f5f; text-decoration: none; margin-left: 5px">검색</button>
+    </div>
+</form>
+        <br>
+<table class="all-table" border="1">
+    <tr style="background-color: lightgray">
+        <th>사원 번호</th>
+        <th>사원 이름</th>
+        <th>입사일</th>
+        <th>연차 갯수</th>
+        <th>수정</th>
+    </tr>
+    <tr th:each="emp :${annualList.dtoList}">
+        <td th:text="${emp.empNum}"></td>
+        <td th:text="${emp.empName}"></td>
+        <td th:text="${#temporals.format(emp.empHireDate, 'yyyy-MM-dd')}"></td>
+        <td th:text="${emp.empAnnual}"></td>
+        <td>
+            <a th:href="@{/admin/annual/getEmployeeInfo/{empNum}(empNum=${emp.empNum})}", target="_blank" onclick="openPopup(this.href, 'EmployeeInfo', 700, 300); return false;">
+                <button class="btn btn-success" style="color: white; text-decoration: none">수정</button>
+            </a>
+        </td>
+    </tr>
+</table>
+        <br>
+        <hr>
+<div style="display: flex; justify-content: center;">
+    <ul class="pagination">
+        <li th:if="${annualList.prev}" class="page-item">
+            <a class="page-link" th:href="@{/admin/annual/all(page = ${annualList.start -1}, type=${pageRequestDto.type}, keyword=${pageRequestDto.keyword})}" tabindex="-1">Previous</a>
+        </li>
+        <li th:class="'page-item' + ${annualList.page == page?'active' : ''}" th:each="page:${annualList.pageList}">
+            <a class="page-link" th:href="@{/admin/annual/all(page=${page}, type=${pageRequestDto.type}, keyword=${pageRequestDto.keyword})}">
+                [[${page}]]
+            </a>
+        </li>
+        <li th:if="${annualList.next}" class="page-item">
+            <a class="page-link" th:href="@{/admin/annual/all(page=${annualList.end + 1}, type=${pageRequestDto.type}, keyword=${pageRequestDto.keyword})}">Next</a>
+        </li>
+    </ul>
+</div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:inline="javascript">
+    var searchForm = $("#searchForm");
+    $('.btn-search').click(function (e) {
+        searchForm.submit();
+    })
+</script>
+<script>
+    function openPopup(url, title, w, h) {
+        const left = (window.screen.width - w) / 2;
+        const top = (window.screen.height - h) / 2;
+        const popupWindow = window.open(
+            url,
+            title,
+            `width=${w}, height=${h}, top=${top}, left=${left}`);
+
+        if (window.focus) {
+            popupWindow.focus();
+        }
+    }
+
+
+
+</script>
+</div>
+</body>
+</html>

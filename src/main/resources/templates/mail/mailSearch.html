@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <style>
+
+        /*.container {*/
+        /*    background-color: ghostwhite;*/
+        /*    border-radius: 5px;*/
+        /*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+        /*    padding: 20px;*/
+        /*}*/
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+        .mail-links a {
+            padding: 10px 30px;
+            text-decoration: none;
+        }
+
+
+        .mail-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .mail-table th, .mail-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* Style table header */
+        /*.mail-table th {*/
+        /*    background-color: #FFFFFF;*/
+        /*}*/
+
+        /*!* Style alternating rows *!*/
+        /*.mail-table tr:nth-child(even) {*/
+        /*    background-color: #FFFFFF;*/
+        /*}*/
+
+
+
+        /* Center align the "게시글이 없습니다." row */
+        .no-articles {
+            text-align: center;
+        }
+
+
+        .pagination li {
+            margin: 5px;
+        }
+
+        .mail-table tbody tr:hover {
+            background-color: #ececec; /* 원하는 배경색 지정 */
+        }
+
+        .move {
+            margin-left: 320px;
+        }
+
+        input[type="checkbox"].chBox {
+            width: 15px;
+            height: 15px;
+        }
+
+        input[type="checkbox"][name="allcheck"] {
+            width: 15px;
+            height: 15px;
+        }
+
+    </style>
+</head>
+<body>
+
+
+<div layout:fragment="content">
+    <div class="container" style="margin-top: 50px">
+<th:block>
+    <h1 class="centered-text" style="font-weight: bold;">[[${name}]] 님과 주고 받은 메시지</h1>
+</th:block>
+
+<hr>
+<!--        <div class="mail-links">-->
+<!--            <a href="/mail">-->
+<!--                <button class="btn btn-primary" onclick="window.location.href='/mail'">전체 메일함</button>-->
+<!--            </a>-->
+<!--            <a href="/mail/send">-->
+<!--                <button class="btn btn-primary" onclick="window.location.href='/mail/send'">보낸 메일함</button>-->
+<!--            </a>-->
+<!--            <a href="/mail/receive">-->
+<!--                <button class="btn btn-primary" onclick="window.location.href='/mail/receive'">받은 메일함</button>-->
+<!--            </a>-->
+<!--            <a href="/mail/unread">-->
+<!--                <button class="btn btn-primary" onclick="window.location.href='/mail/unread'">안 읽은 메일함</button>-->
+<!--            </a>-->
+<!--            <a href="/mail/write">-->
+<!--                <button class="btn btn-primary" onclick="window.location.href='/mail/write'">메일 작성</button>-->
+<!--            </a>-->
+<!--        </div>-->
+<hr>
+
+<form name="list" action="mail/delete">
+    <div class="delBtn">
+        <button type="button" class="btn btn-danger selectDelete_btn">삭제</button>
+    </div>
+
+    <br>
+    <table class="mail-table table-hover" border="1">
+        <tr style="background-color: lightgray">
+            <th><input type="checkbox" name="allcheck" onclick="allCheck()"></th>
+            <th>메시지 제목</th>
+            <th>보낸/받는 사람</th>
+            <th>작성 시간</th>
+        </tr>
+        <th:block th:if="${list.hasNoArticles()}" class="no-articles">
+            <tr>
+                <td colspan="4">게시글이 없습니다.</td>
+            </tr>
+        </th:block>
+        <tr th:each="dto : ${list.content}">
+            <td><input class="chBox" type="checkbox" name="rowcheck" th:value="${dto.mail_num}"></td>
+
+            <th:block th:each="list : ${list}" th:if="${dto.mail_sender == list.id}">
+                <td>
+                    <a th:href="@{/mail/read/{mail_num}(mail_num = ${dto.mail_num})}">
+                        [보낸 메시지] [[${dto.mail_title}]]
+                    </a>
+                </td>
+                <td>
+                    <a th:href="@{/mail/search/{mail_receiver}(mail_receiver = ${dto.mail_receiver})}">
+                        [[${dto.emp_name}]]
+                    </a>
+                </td>
+            </th:block>
+            <th:block th:each="list : ${list}" th:unless="${dto.mail_sender == list.id}" >
+                <td>
+                    <a th:href="@{/mail/read/{mail_num}(mail_num = ${dto.mail_num})}">
+                        [받은 메시지] [[${dto.mail_title}]]
+                    </a>
+                </td>
+                <td>
+                    <a th:href="@{/mail/search/{mail_sender}(mail_sender = ${dto.mail_sender})}">
+                        [[${dto.emp_name}]]
+                    </a>
+                </td>
+            </th:block>
+            <td th:text="${dto.mail_Date}"></td>
+        </tr>
+<!--        <tr th:each="dto : ${list}">-->
+<!--            <td colspan="5">-->
+<!--                <th:block th:if="${dto.startPage > 5}">-->
+<!--                    <a th:href="@{mail(pageNo=${dto.startPage - 5})}" th:text="이전"/>-->
+<!--                </th:block>-->
+<!--                <th:block th:each="pNo : ${#numbers.sequence(dto.startPage, dto.endPage)}" >-->
+<!--                    <a th:href="@{mail(pageNo=${pNo})}" th:text="${pNo}"></a>-->
+<!--                </th:block>-->
+<!--                <th:block th:if="${dto.endPage < dto.totalPages}">-->
+<!--                    <a th:href="@{mail(pageNo=${dto.startPage + 5})}" th:text="다음"/>-->
+<!--                </th:block>-->
+<!--            </td>-->
+<!--        </tr>-->
+    </table>
+</form>
+        <br>
+        <div class="move" th:if="${!mailList.isEmpty()}">
+            <!-- 전역 변수 선언 -->
+            <nav
+                    th:with="pageNumber = ${mailList.pageable.pageNumber}, pageSize = ${mailList.pageable.pageSize},totalPages = ${mailList.totalPages},startPage = ${T(java.lang.Math).floor(pageNumber / pageSize) * pageSize + 1},tempEndPage = ${startPage + pageSize - 1},endPage = (${tempEndPage < totalPages ? tempEndPage : totalPages})"
+                    aria-label="Page navigation">
+                <ul class="pagination">
+                    <!-- 처음으로 이동 -->
+                    <li th:classappend="${pageNumber == 0} ? 'disabled'" class="page-item">
+                        <a class="page-link" th:href="@{/mail/search/{empNum}(page=0)}">
+                            <span>&laquo;첫 페이지</span>
+                        </a>
+                    </li>
+
+                    <!-- 이전으로 이동 -->
+                    <li th:classappend="${mailList.first} ? 'disabled'" class="page-item">
+                        <a class="page-link" th:href="${mailList.first} ? '#' : @{/mail/search/{empNum}(page=${pageNumber - 1})}" aria-label="Previous">
+                            <span aria-hidden="true">&lt;이전 페이지</span>
+                        </a>
+                    </li>
+
+                    <!-- 특정 페이지로 이동 -->
+                    <li th:each="page: ${#numbers.sequence(startPage, endPage)}" th:classappend="${page == pageNumber + 1} ? 'active'" class="page-item">
+                        <a th:text="${page}" class="page-link" th:href="@{/mail/search/{empNum}(page=${page - 1})}"></a>
+                    </li>
+
+                    <!-- 다음으로 이동 -->
+                    <li th:classappend="${mailList.last} ? 'disabled'" class="page-item">
+                        <a class="page-link" th:href="${mailList.last} ? '#' : @{/mail/search/{empNum}(page=${pageNumber + 1})}" aria-label="Next">
+                            <span aria-hidden="true">다음 페이지&gt;</span>
+                        </a>
+                    </li>
+
+                    <!-- 마지막으로 이동 -->
+                    <li th:classappend="${pageNumber == totalPages - 1} ? 'disabled'" class="page-item">
+                        <a class="page-link" th:href="@{/mail/search/{empNum}(page=${totalPages - 1})}">
+                            <span>마지막 페이지&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div> <!-- /container -->
+    </div>
+
+<script type="text/javascript">
+    function allCheck(){
+        var ac = document.list.allcheck;
+        var rc = document.list.rowcheck;
+
+        if (ac.checked == true) {
+            for (i=0; i < rc.length; i++) {
+                rc[i].checked = true;
+            }
+        } else {
+            for (i=0; i<rc.length; i++) {
+                rc[i].checked = false;
+            }
+        }
+    }
+
+    $(".selectDelete_btn").click(function (){
+        var rc = document.list.rowcheck;
+
+        flag = false;
+
+        for (i = 0; i < rc.length; i++) {
+            if(rc[i].checked) {
+                flag = true;
+            }
+        }
+
+        if (flag == false) {
+            alert("하나 이상 선택되어야 삭제가 가능합니다.");
+            return;
+        } else {
+            var confirm_val = confirm("정말 삭제하시겠습니까?");
+        }
+
+
+        if(confirm_val) {
+            var checkArr = new Array();
+
+            $("input[class='chBox']:checked").each(function(){
+                checkArr.push($(this).attr("value"));
+            });
+
+            $.ajax({
+                url : "/mail/delete",
+                type : "POST",
+                data : {chbox : checkArr},
+                success : function (result){
+                    if (result==1) {
+                        location.href = "/mail";
+                    } else {
+                        alert("삭제 실패");
+                    }
+
+                }
+            });
+        }
+    });
+</script>
+</div>
+</body>
+</html>

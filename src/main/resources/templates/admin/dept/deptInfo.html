@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <title>Title</title>
+    <Style>
+
+        /*.container {*/
+        /*    background-color: ghostwhite;*/
+        /*    border-radius: 5px;*/
+        /*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+        /*    padding: 20px;}*/
+
+        .deptInfo-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .deptInfo-table th, .deptInfo-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /*.deptInfo-table tr {*/
+        /*    background-color: #ffffff;*/
+        /*}*/
+
+        /*.deptInfo-table tr:nth-child(even) {*/
+        /*    background-color: #ffffff;*/
+        /*}*/
+
+        .deptInfo-table tbody tr:hover {
+            background-color: #ececec; /* 원하는 배경색 지정 */
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        label {
+            font-weight: bold;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        /*input[type="submit"] {*/
+        /*    background-color: #28a745;*/
+        /*    color: white;*/
+        /*    border: none;*/
+        /*    padding: 10px 20px;*/
+        /*    border-radius: 4px;*/
+        /*    cursor: pointer;*/
+        /*}*/
+        input[type="checkbox"].chBox {
+            width: 15px;
+            height: 15px;
+        }
+        input[type="checkbox"][name="allcheck"] {
+            width: 15px;
+            height: 15px;
+        }
+
+        ul {
+            list-style: none;
+        }
+        li {
+            float: left;
+        }
+        #modal.modal-overlay {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(1.5px);
+            -webkit-backdrop-filter: blur(1.5px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        #modal .modal-window {
+            background: rgba( 35, 184, 116, 0.75 );
+            box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+            backdrop-filter: blur( 13.5px );
+            -webkit-backdrop-filter: blur( 13.5px );
+            border-radius: 10px;
+            border: 1px solid rgba( 255, 255, 255, 0.18 );
+            width: 400px;
+            height: 500px;
+            position: relative;
+            top: -100px;
+            padding: 10px;
+        }
+        #modal .title {
+            padding-left: 10px;
+            display: inline;
+            text-shadow: 1px 1px 2px gray;
+            color: white;
+
+        }
+        #modal .title h2 {
+            display: inline;
+        }
+        #modal .close-area {
+            display: inline;
+            float: right;
+            padding-right: 10px;
+            cursor: pointer;
+            text-shadow: 1px 1px 2px gray;
+            color: white;
+        }
+
+        #modal .content {
+            margin-top: 20px;
+            padding: 0px 10px;
+        }
+    </Style>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="container"  style="margin-top: 50px">
+        <div style="display: flex;    align-items: center;">
+            <h1 class="centered-text" style="font-weight: bold">부서 정보</h1>
+            <button style="border: 1px solid #565656; margin-left: 10px;" >
+                <a th:href="@{/admin/dept/deptList}" style=" color: #565656; text-decoration: none">부서 목록으로</a>
+            </button>
+        </div>
+        <hr>
+        <br>
+
+<table class="deptInfo-table" border="1" th:object="${deptInfo}">
+    <tbody>
+    <tr style="background-color: lightgray">
+        <td><label style="font-weight: bold;">부서 번호</label></td>
+        <td><label style="font-weight: bold;">부서 이름</label></td>
+        <td><label style="font-weight: bold;">부서 위치</label></td>
+        <td><label style="font-weight: bold;">부서 분류</label></td>
+        <td><label style="font-weight: bold;">사원 수</label></td>
+    </tr>
+    <tr>
+        <td th:text="*{deptNo}" id="deptNo" name="deptNo"></td>
+        <td th:text="*{deptName}"></td>
+        <td th:text="*{deptLoc}"></td>
+        <td th:text="*{deptBranch}"></td>
+        <td th:text="${count}" id="countEmployee"></td>
+    </tr>
+    </tbody>
+</table>
+        <div style="margin-top: 20px; display: flex; justify-content: flex-end">
+<button class="btn btn-primary" id="btn-modal">정보수정
+<!--    <a th:href="@{/admin/dept/deptInfoModify/{deptNo}(deptNo=${deptNo})}" style="color: #565656; text-decoration: none">정보 수정</a>-->
+</button>
+<button class="btn btn-danger" onclick="deleteDept()" style="margin-left: 10px;">부서 삭제</button>
+        </div>
+        <br>
+<hr>
+        <br>
+        <h1 class="centered-text" style="font-weight: bold">회원 정보</h1>
+        <hr>
+        <br>
+
+<table class="deptInfo-table" border="1">
+    <tbody>
+    <tr style="background-color: lightgray">
+        <th>사원 번호</th>
+        <th>사원 이름</th>
+        <th>사원 전화번호</th>
+        <th>입사일</th>
+        <th>직책</th>
+    </tr>
+    <tr th:each="emp :${empListInDeptNo.dtoList}">
+        <td th:text="${emp.empNum}"></td>
+        <td th:text="${emp.empName}"></td>
+        <td th:text="${emp.empPhone}"></td>
+        <td th:text="${emp.empHireDate}"></td>
+        <td th:text="${emp.empPosition}"></td>
+    </tr>
+    </tbody>
+</table>
+        <br>
+        <hr>
+<div th:if="${not #lists.isEmpty(empListInDeptNo.dtoList)}" style="display: flex; justify-content: center;">
+    <ul class="pagination">
+        <li th:if="${empListInDeptNo.prev}" class="page-item">
+            <a class="page-link" th:href="@{/admin/dept/deptInfo/{deptNo}(deptNo=${deptInfo.deptNo}, page=${empListInDeptNo.start - 1}}" tabindex="-1">Previous</a>
+        </li>
+        <li th:class="'page-item' + ${empListInDeptNo.page == page?' active' : ''}" th:each="page : ${empListInDeptNo.pageList}">
+            <a class="page-link" th:href="@{/admin/dept/deptInfo/{deptNo}(deptNo=${deptInfo.deptNo}, page=${page})}">
+                [[${page}]]
+            </a>
+        </li>
+        <li th:if="${empListInDeptNo.next}" class="page-item">
+            <a class="page-link" th:href="@{/admin/dept/deptInfo/{deptNo}(deptNo=${deptInfo.deptNo}, page=${empListInDeptNo.end + 1})}">Next</a>
+        </li>
+    </ul>
+    <br>
+</div>
+    </div>
+    <div id="modal" class="modal-overlay">
+        <div class="modal-window">
+            <div class="title">
+                <h2>부서 정보 수정</h2>
+            </div>
+            <div class="close-area">X</div>
+            <div class="content">
+                <div class="modalContainer"  style="margin-top: 50px;">
+                    <br>
+                    <form th:action="@{'/admin/dept/deptInfoModify/' + ${deptNo}}" method="post" th:object="${deptInfo}">
+                        <table class="deptInfoModify-table"  style="border-collapse: separate; margin:auto;text-align: center;background-color: whitesmoke;">
+                            <colgroup>
+                                <col width="30%">
+                            </colgroup>
+                            <tbody><tr>
+                                <td style="background-color: #f0ffea;"><label style="font-weight: bold; background-color: #f0ffea;text-align: center;">부서 번호</label></td>
+                                <td><input type="hidden" name="deptNo" th:value="*{deptNo}">[[${deptInfo.deptNo}]]</td>
+                            </tr>
+                            <tr>
+                                <td style="background-color: #f0ffea;"><label style="background-color: #f0ffea; font-weight: bold;text-align: center;">부서명</label></td>
+                                <td><input type="text" name="deptName" th:value="*{deptName}"></td>
+                            </tr>
+                            <tr>
+                                <td style="background-color: #f0ffea;"><label style="background-color: #f0ffea; font-weight: bold;text-align: center;">부서 위치</label></td>
+                                <td><input type="text" name="deptLoc" th:value="*{deptLoc}"></td>
+                            </tr>
+                            <tr>
+                                <td style="background-color: #f0ffea;"><label style="font-weight: bold; background-color: #f0ffea;text-align: center;">분류</label></td>
+                                <td>
+                                    <select name="deptBranch" th:value="*{deptBranch}">
+                                        <option value="0">본사</option>
+                                        <option value="1">해외</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <input type="submit" class="btn btn-primary"  style="float: right;" th:value="수정하기">
+                        <br><br>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function deleteDept() {
+        const countEmployee = document.getElementById('countEmployee').textContent;
+        const deptNo = document.getElementById('deptNo').textContent;
+        if (countEmployee !== '0') {
+            alert("부서 내 사원이 존재해 삭제할 수 없습니다.")
+            return false;
+        } else {
+            if (confirm("삭제 처리하시겠습니까?")) {
+                $.ajax({
+                    url: '/admin/dept/deleteDept',
+                    type: 'POST',
+                    data: {deptNo: deptNo},
+                    success: function (data) {
+                        if (data) {
+                            alert("삭제 완료");
+                            window.location.href = '/admin/dept/deptList';
+                        }
+                    },
+                });
+            } else {
+                return false;
+            }
+        }
+    }
+</script>
+</div>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>EmployeeList</title>
+    <style>
+        /*.container {*/
+        /*    background-color: ghostwhite;*/
+        /*    border-radius: 5px;*/
+        /*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+        /*    padding: 20px;}*/
+
+        .employeeList-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .employeeList-table th, .employeeList-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /*.employeeList-table tr {*/
+        /*    background-color: #ffffff;*/
+        /*}*/
+
+        /*.employeeList-table tr:nth-child(even) {*/
+        /*    background-color: #ffffff;*/
+        /*}*/
+
+        .employeeList-table tbody tr:hover {
+            background-color: #ececec; /* 원하는 배경색 지정 */
+        }
+
+        form {
+            max-width: 100%;
+            margin: 0 auto;
+            height: 80px;
+        }
+        label {
+            font-weight: bold;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="checkbox"].chBox {
+            width: 15px;
+            height: 15px;
+        }
+        input[type="checkbox"][name="allcheck"] {
+            width: 15px;
+            height: 15px;
+        }
+        .pageNum li {
+            margin: auto;
+        }
+
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container"  style="margin-top: 50px">
+        <h1 class="centered-text" style="font-weight: bold">사원 관리</h1>
+        <hr>
+        <br>
+<form action = "/admin/employee/employeeList" method="get" id="searchForm">
+    <input type = "hidden" name="page" value="1">
+    <div class="search" style="display: flex; align-items: center; margin: auto; flex-direction: row; justify-content: flex-end;">
+    <lable style="font-size:18px; font-weight: bold; width: 6%;">검색</lable>
+    <select name="type" style="width: 20%">
+        <option value="empName" th:selected="${pageRequestDto.type == 'empName'}">사원 이름</option>
+        <option value="empNum" th:selected="${pageRequestDto.type == 'empNum'}">사원 번호</option>
+    </select>
+        <input type="text" id="keyword" name="keyword" th:value="${pageRequestDto.keyword}" style="width: 20%; margin-left: 5px;" placeholder="검색어를 입력하세요">
+        <button class="btn-search btn btn-primary" type="button" style="color: #605f5f; margin-left: 5px;">검색</button>
+    </div>
+
+<br><br>
+
+</form>
+<table class="employeeList-table table-hover" border="1">
+    <tr style="background-color: lightgray">
+        <th>사원 번호</th>
+        <th>사원 이름</th>
+        <th>사원 부서</th>
+        <th>직책</th>
+        <th>입사일</th>
+    </tr>
+    <tr th:each="emp :${employeeList.dtoList}">
+        <td th:text="${emp.empNum}"></td>
+        <td><a th:href="@{/admin/employee/employeeInfo/{empNum}(empNum=${emp.empNum}, page=${employeeList.page}, type=${pageRequestDto.type}, keyword=${pageRequestDto.keyword})}"><span th:text="${emp.empName}"></span></a></td>
+        <td th:text="${emp.deptNo}"></td>
+        <td th:text="${emp.empPosition}"></td>
+        <td th:text="${#temporals.format(emp.empHireDate, 'yyyy-MM-dd')}"></td>
+    </tr>
+</table>
+        <br>
+        <hr>
+        <div class="pageNum" style="display: flex; justify-content: center;">
+            <ul class="pagination">
+                <li th:if="${employeeList.prev}"  class="page-item">
+                    <a class="page-link" th:href="@{/admin/employee/employeeList(page = ${employeeList.start -1}, type=${pageRequestDto.type}, keyword=${pageRequestDto.keyword})}" tabindex="-1">Previous</a>
+                </li>
+                <li th:class="'page-item' + ${employeeList.page == page?'active' : ''}" th:each="page:${employeeList.pageList}">
+                    <a class="page-link" th:href="@{/admin/employee/employeeList(page=${page}, type=${pageRequestDto.type}, keyword=${pageRequestDto.keyword})}">
+                        [[${page}]]
+                    </a>
+                </li>
+                <li  class="page-item" th:if="${employeeList.next}">
+                    <a class="page-link" th:href="@{/admin/employee/employeeList(page=${employeeList.end + 1}, type=${pageRequestDto.type}, keyword=${pageRequestDto.keyword})}">Next</a>
+                </li>
+            </ul>
+        </div>
+
+    <button class="btn btn-primary" style="float:right;"><a th:href="@{/admin/employee/register}" style="color: white; text-decoration: none;">사원등록</a></button>
+
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:inline="javascript">
+        var searchForm = $("#searchForm");
+        $('.btn-search').click(function (e) {
+            searchForm.submit();
+        })
+
+    </script>
+</div>
+</body>
+</html>

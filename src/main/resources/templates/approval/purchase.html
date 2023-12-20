@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/basic.html}">
+<head>
+  <meta charset="UTF-8">
+  <title>지출결의서</title>
+
+  <Style>
+
+    /*.container {*/
+    /*    background-color: ghostwhite;*/
+    /*    border-radius: 5px;*/
+    /*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+    /*    padding: 20px;}*/
+    .table-container {
+      display: -webkit-inline-flex;
+    }
+    .deptList-table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    .deptList-table th, .deptList-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    /*.deptList-table tr {*/
+    /*    background-color: #ffffff;*/
+    /*}*/
+
+    /*.deptList-table tr:nth-child(even) {*/
+    /*    background-color: #ffffff;*/
+    /*}*/
+
+    .deptList-table tbody tr:hover {
+      background-color: #ececec; /* 원하는 배경색 지정 */
+    }
+
+    form {
+      margin: 0 auto;
+    }
+    label {
+      font-weight: bold;
+    }
+    select {
+      width: 100%;
+      padding: 3px;
+      margin: 3px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 8px;
+      margin: auto;
+      border: 1px solid #e3e3e3;
+      border-radius: 4px
+    }
+    input[type="submit"] {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    input[type="checkbox"].chBox {
+      width: 15px;
+      height: 15px;
+    }
+    input[type="checkbox"][name="allcheck"] {
+      width: 15px;
+      height: 15px;
+    }
+
+    ul {
+      list-style: none;
+    }
+    li {
+      float: left;
+    }
+
+    #documentNum {
+      display: none;
+    }
+
+    .table3 {
+      width: 700px;
+    }
+
+    .addPersonTable{
+      display: flex;
+    }
+
+
+  </Style>
+</head>
+<body>
+<div layout:fragment="content">
+  <div class="container"  style="margin-top: 50px">
+    <h1 class="centered-text" style="font-weight: bold">지출 결의서</h1>
+    <hr>
+    <br>
+
+    <form action="/approval/purchaseSuccess" method="post" id="pageForm">
+      <div class="table-container" style="width: 95%">
+        <div class="table1">
+          <table style="border: 1px solid rgb(0, 0, 0); font-family: malgun gothic,dotum,arial,tahoma; margin-top: 1px; border-collapse: collapse;height: 103px;"><!-- User -->
+            <tbody>
+            <tr>
+              <td style="width: 65px ;background: rgb(226, 226, 226); padding: 5px; border: 1px solid black; height: 18px; text-align: center; color: rgb(0, 0, 0); font-size: 12px; font-weight: bold; vertical-align: middle;">
+                기안자
+              </td>
+              <td style="background: rgb(255, 255, 255); padding: 5px; border: 1px solid black; text-align: left; color: rgb(0, 0, 0); font-size: 12px; font-weight: normal; vertical-align: middle;">
+                <span unselectable="on" contenteditable="false" class="comp_wrap" data-cid="0" data-dsl="{{label:draftUser}}" data-wrapper="" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;" data-value="" data-autotype=""><span class="comp_item" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;">[[${authInfo.emp_name}]]</span><span contenteditable="false" class="comp_active" style="display: none; font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"> <span class="Active_dot1"></span><span class="Active_dot2"></span> <span class="Active_dot3"></span><span class="Active_dot4"></span> </span> <span contenteditable="false" class="comp_hover" data-content-protect-cover="true" data-origin="0" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"> <a contenteditable="false" class="ic_prototype ic_prototype_trash" data-content-protect-cover="true" data-component-delete-button="true"></a> </span> </span>
+              </td>
+            </tr>
+            <tr>
+              <td style="background: rgb(226, 226, 226); padding: 5px; border: 1px solid black; height: 18px; text-align: center; color: rgb(0, 0, 0); font-size: 12px; font-weight: bold; vertical-align: middle;">
+                부서
+              </td>
+              <td style="background: rgb(255, 255, 255); padding: 5px; border: 1px solid black; text-align: left; color: rgb(0, 0, 0); font-size: 12px; font-weight: normal; vertical-align: middle;">
+                <span unselectable="on" contenteditable="false" class="comp_wrap" data-cid="1" data-dsl="{{label:draftDept}}" data-wrapper="" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;" data-value="" data-autotype=""><span class="comp_item" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;">[[${authInfo.dept_no}]]</span><span contenteditable="false" class="comp_active" style="display: none; font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"> <span class="Active_dot1"></span><span class="Active_dot2"></span> <span class="Active_dot3"></span><span class="Active_dot4"></span> </span> <span contenteditable="false" class="comp_hover" data-content-protect-cover="true" data-origin="1" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"> <a contenteditable="false" class="ic_prototype ic_prototype_trash" data-content-protect-cover="true" data-component-delete-button="true"></a> </span> </span>
+              </td>
+            </tr>
+            <tr>
+              <td style="background: rgb(226, 226, 226); padding: 5px; border: 1px solid black; height: 18px; text-align: center; color: rgb(0, 0, 0); font-size: 12px; font-weight: bold; vertical-align: middle;">
+
+                기안일
+              </td>
+              <td style="background: rgb(255, 255, 255); padding: 5px; border: 1px solid black; text-align: left; color: rgb(0, 0, 0); font-size: 12px; font-weight: normal; vertical-align: middle;">
+                <span unselectable="on" contenteditable="false" class="comp_wrap" data-cid="2" data-dsl="{{label:draftDate}}" data-wrapper="" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;" data-value="" data-autotype=""><span class="comp_item" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"><input type="date" name="approvalDate" /></span><span contenteditable="false" class="comp_active" style="display: none; font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"> <span class="Active_dot1"></span><span class="Active_dot2"></span> <span class="Active_dot3"></span><span class="Active_dot4"></span> </span> <span contenteditable="false" class="comp_hover" data-content-protect-cover="true" data-origin="2" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"> <a contenteditable="false" class="ic_prototype ic_prototype_trash" data-content-protect-cover="true" data-component-delete-button="true"></a> </span> </span>
+              </td>
+            </tr>
+            <tr style="display: none;">
+              <td style="background: rgb(226, 226, 226); padding: 5px; border: 1px solid black; height: 18px; text-align: center; color: rgb(0, 0, 0); font-size: 12px; font-weight: bold; vertical-align: middle;">
+                문서번호
+              </td>
+              <td style="background: rgb(255, 255, 255); padding: 5px; border: 1px solid black; text-align: left; color: rgb(0, 0, 0); font-size: 12px; font-weight: normal; vertical-align: middle;">
+                <span unselectable="on" contenteditable="false" class="comp_wrap" data-cid="3" data-dsl="{{label:docNo}}" data-wrapper="" style="font-size: 9pt;" data-value="" data-autotype=""><span class="comp_item" style="font-size: 9pt;"><input type="text" th:attr="data-totalkey=${purchaseFieldNames[0]},data-reasonkey=${purchaseFieldNames[1]},data-categorykey=${purchaseFieldNames[2]},data-costkey=${purchaseFieldNames[3]},data-detailkey=${purchaseFieldNames[4]}" th:value="1" name="documentNum" th:id="documentNum" readonly/></span><span contenteditable="false" class="comp_active" style="font-size: 9pt;"> <span class="Active_dot1"></span><span class="Active_dot2"></span> <span class="Active_dot3"></span><span class="Active_dot4"></span> </span> <span contenteditable="false" class="comp_hover" data-content-protect-cover="true" data-origin="3" style="font-size: 9pt;"> <a contenteditable="false" class="ic_prototype ic_prototype_trash" data-content-protect-cover="true" data-component-delete-button="true"></a> </span> </span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <br/>
+        <div class="table2" style="margin-left: 3px;">
+          <table style="height:103px; border: 1px solid rgb(0, 0, 0); font-family: malgun gothic,dotum,arial,tahoma; border-collapse: collapse;">
+            <tr>
+              <td style="background: rgb(226, 226, 226); padding: 5px; width:55px; border: 1px solid black; height: 18px; text-align: center; color: rgb(0, 0, 0); font-size: 12px; font-weight: bold; vertical-align: middle;">결재선</td>
+              <td style="width: 120px; background: rgb(255, 255, 255); padding: 5px; border: 1px solid black; text-align: left; color: rgb(0, 0, 0); font-size: 12px; font-weight: normal; vertical-align: middle;">
+                <select id="deptPick">
+                  <option th:text="선택하세요"></option><th:block th:each="deptList : ${deptList}">
+                  <option th:value="${deptList.deptNo}" th:text="${deptList.deptName}"></option>
+                </th:block>
+                </select>
+                <select th:class="empSelBox">
+                  <option th:value="pickMe" th:text="선택하세요"></option>
+                  <th:block th:each="empList : ${empList}">
+                    <option th:class="optionClass" th:attr="data-deptnum=${empList.deptNo},data-empnum=${empList.empNum}" th:style="${'display:none'}" th:value="${empList.empNum}" th:text="${empList.empName}"></option>
+                  </th:block>
+                </select><input type="button" th:id="addPerson" th:value="추가" style="display: block; width:100%;"/>
+              </td>
+            </tr>
+          </table>
+          </div>
+        <div class="table3">
+          <table style="height:103px;">
+            <tr th:id="addPersonDiv" class="addPersonTable">
+            </tr>
+          </table>
+        </div>
+      </div>
+
+
+
+
+
+
+      <!--    <table class="table3">-->
+      <!--       -->
+      <!--    </table>-->
+
+
+
+
+      <br><br>
+
+      <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse; width: 95%; height: 142px;"><colgroup></colgroup>
+        <tbody>
+        <tr>
+          <td height="30" width="72" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; font-family: &quot;맑은 고딕&quot;, monospace; vertical-align: middle; text-align: center; border: 1px solid windowtext; height: 30px; width: 150px; background-color: rgb(226, 226, 226);">
+            <strong style="font-size: 9pt;">제 목</strong>
+          </td>
+          <td colspan="12" width="760" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; font-family: &quot;맑은 고딕&quot;, monospace; vertical-align: middle; border-image: initial; font-size: 10pt; text-align: center; border-width: 1px; border-style: solid; border-color: windowtext black windowtext windowtext; width: 720px;">
+            <p style="text-align: left; font-family: &quot;맑은 고딕&quot;, monospace; font-size: 10pt; line-height: 20px; margin-top: 0px; margin-bottom: 0px;"><span unselectable="on" contenteditable="false" class="comp_wrap" data-cid="4" data-dsl="{{text}}" data-wrapper="" style="width: 100%; font-family: &quot;맑은 고딕&quot;, monospace; font-size: 10pt;" data-value="" data-autotype=""><input type="text" class="ipt_editor" name="title"/><span contenteditable="false" class="comp_active" style="display: none; font-family: &quot;맑은 고딕&quot;, monospace; font-size: 10pt;"> <span class="Active_dot1"></span><span class="Active_dot2"></span> <span class="Active_dot3"></span><span class="Active_dot4"></span> </span> <span contenteditable="false" class="comp_hover" data-content-protect-cover="true" data-origin="4" style="font-family: &quot;맑은 고딕&quot;, monospace; font-size: 10pt;"> <a contenteditable="false" class="ic_prototype ic_prototype_trash" data-content-protect-cover="true" data-component-delete-button="true"></a> </span> </span><br></p>
+          </td>
+        </tr>
+        <tr>
+          <td height="40" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; font-family: &quot;맑은 고딕&quot;, monospace; vertical-align: middle; text-align: center; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-left: 1px solid windowtext; border-image: initial; height: 30px; border-top: none; background-color: rgb(226, 226, 226); width: 150px;" class="dext_table_border_t">
+            <strong style="font-size: 9pt;">작성일자</strong>
+          </td>
+          <td colspan="6" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; font-family: &quot;맑은 고딕&quot;, monospace; vertical-align: middle; font-size: 10pt; text-align: center; border-top: 1px solid windowtext; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-left: none; width: 303px;" class="dext_table_border_l">
+            <p style="font-family: &quot;맑은 고딕&quot;, monospace; font-size: 10pt; line-height: 20px; margin-top: 0px; margin-bottom: 0px;"><span unselectable="on" contenteditable="false" class="comp_wrap" data-cid="5" data-dsl="{{calendar}}" data-wrapper="" style="font-family: &quot;맑은 고딕&quot;, monospace; font-size: 10pt;" data-value="" data-autotype=""><input class="ipt_editor ipt_editor_date" type="date" name="creationDate"/><span contenteditable="false" class="comp_active" style="display: none; font-family: &quot;맑은 고딕&quot;, monospace; font-size: 10pt;"> <span class="Active_dot1"></span><span class="Active_dot2"></span> <span class="Active_dot3"></span><span class="Active_dot4"></span> </span> <span contenteditable="false" class="comp_hover" data-content-protect-cover="true" data-origin="5" style="font-family: &quot;맑은 고딕&quot;, monospace; font-size: 10pt;"> <a contenteditable="false" class="ic_prototype ic_prototype_trash" data-content-protect-cover="true" data-component-delete-button="true"></a> </span> </span><br></p>
+          </td>
+          <td style="padding-top: 1px; padding-right: 1px; padding-left: 1px; font-family: &quot;맑은 고딕&quot;, monospace; vertical-align: middle; text-align: center; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-left: 1px solid windowtext; border-image: initial; height: 30px; border-top: none; background-color: rgb(226, 226, 226); width: 150px;" class="dext_table_border_t">
+            <strong style="font-size: 9pt;">소 속</strong>
+          </td>
+          <td colspan="5" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; font-family: &quot;맑은 고딕&quot;, monospace; vertical-align: middle; font-size: 10pt; text-align: center; border-top: 1px solid windowtext; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-left: none; width: 242px;" class="dext_table_border_l">
+            <p style="font-family: &quot;맑은 고딕&quot;, monospace; font-size: 10pt; line-height: 20px; margin-top: 0px; margin-bottom: 0px;"><span unselectable="on" contenteditable="false" class="comp_wrap" data-cid="6" data-dsl="{{text}}" data-wrapper="" style="width: 100%; font-family: &quot;맑은 고딕&quot;, monospace; font-size: 10pt;" data-value="" data-autotype=""><input class="ipt_editor"type="hidden"/>[[${authInfo.dept_no}]]<span contenteditable="false" class="comp_active" style="display: none; font-family: &quot;맑은 고딕&quot;, monospace; font-size: 10pt;"> <span class="Active_dot1"></span><span class="Active_dot2"></span> <span class="Active_dot3"></span><span class="Active_dot4"></span> </span> <span contenteditable="false" class="comp_hover" data-content-protect-cover="true" data-origin="6" style="font-family: &quot;맑은 고딕&quot;, monospace; font-size: 10pt;"> <a contenteditable="false" class="ic_prototype ic_prototype_trash" data-content-protect-cover="true" data-component-delete-button="true"></a> </span> </span><br></p>
+          </td>
+        </tr>
+        <tr>
+          <td height="30" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; font-family: &quot;맑은 고딕&quot;, monospace; vertical-align: middle; text-align: center; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-left: 1px solid windowtext; border-image: initial; height: 30px; border-top: none; background-color: rgb(226, 226, 226); width: 150px;" class="dext_table_border_t">
+            <strong style="font-size: 9pt;">작 성 자</strong>
+          </td>
+          <td colspan="6" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; font-family: &quot;맑은 고딕&quot;, monospace; vertical-align: middle; font-size: 10pt; text-align: center; border-top: 1px solid windowtext; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-left: none; width: 303px;" class="dext_table_border_l">
+            <p style="font-family: &quot;맑은 고딕&quot;, monospace; font-size: 10pt; line-height: 20px; margin-top: 0px; margin-bottom: 0px;"><span unselectable="on" contenteditable="false" class="comp_wrap" data-cid="7" data-dsl="{{text}}" data-wrapper="" style="width: 100%; font-family: &quot;맑은 고딕&quot;, monospace; font-size: 10pt;" data-value="" data-autotype=""><input class="ipt_editor" type="text" name="author" th:value="${#strings.toString(authInfo.emp_num)}"/><span contenteditable="false" class="comp_active" style="display: none; font-family: &quot;맑은 고딕&quot;, monospace; font-size: 10pt;"> <span class="Active_dot1"></span><span class="Active_dot2"></span> <span class="Active_dot3"></span><span class="Active_dot4"></span> </span> <span contenteditable="false" class="comp_hover" data-content-protect-cover="true" data-origin="7" style="font-family: &quot;맑은 고딕&quot;, monospace; font-size: 10pt;"> <a contenteditable="false" class="ic_prototype ic_prototype_trash" data-content-protect-cover="true" data-component-delete-button="true"></a> </span> </span><br></p>
+          </td>
+          <td style="padding-top: 1px; padding-right: 1px; padding-left: 1px; font-family: &quot;맑은 고딕&quot;, monospace; vertical-align: middle; text-align: center; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-left: 1px solid windowtext; border-image: initial; height: 30px; border-top: none; background-color: rgb(226, 226, 226); width: 150px;" class="dext_table_border_t">
+            <strong style="font-size: 9pt;">금 액</strong>
+          </td>
+          <td class="total_price dext_table_border_l" colspan="5" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; font-family: &quot;맑은 고딕&quot;, monospace; vertical-align: middle; font-size: 10pt; text-align: center; border-top: 1px solid windowtext; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-left: none; width: 242px;">
+            <p style="margin:auto;"><input type="text" name="totalAmount" id="totalAmount" readonly/><br></p>
+          </td>
+        </tr>
+        <tr>
+          <td height="150" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; font-family: &quot;맑은 고딕&quot;, monospace; vertical-align: middle; text-align: center; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-left: 1px solid windowtext; border-image: initial; height: 51px; border-top: none; background-color: rgb(226, 226, 226); width: 150px;" class="dext_table_border_t">
+            <strong style="font-size: 9pt;">지출사유</strong>
+          </td>
+          <td colspan="12" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; font-family: &quot;맑은 고딕&quot;, monospace; vertical-align: top; font-size: 10pt; text-align: center; border-top: 1px solid windowtext; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-left: none; width: 683px; height: 51px; background-repeat: no-repeat;" class="dext_table_border_l">
+            <p style="font-family: &quot;맑은 고딕&quot;, monospace; font-size: 10pt; line-height: 20px; margin-top: 0px; margin-bottom: 0px;"><span unselectable="on" contenteditable="false" class="comp_wrap" data-cid="8" data-dsl="{{textarea}}" data-wrapper="" style="width: 100%; font-family: &quot;맑은 고딕&quot;, monospace; font-size: 10pt;" data-value="" data-autotype=""><textarea name="reason"  class="txta_editor" rows="4"  cols="98"></textarea><span contenteditable="false" class="comp_active" style="display: none; font-family: &quot;맑은 고딕&quot;, monospace; font-size: 10pt;"> <span class="Active_dot1"></span><span class="Active_dot2"></span> <span class="Active_dot3"></span><span class="Active_dot4"></span> </span> <span contenteditable="false" class="comp_hover" data-content-protect-cover="true" data-origin="8" style="font-family: &quot;맑은 고딕&quot;, monospace; font-size: 10pt;"> <a contenteditable="false" class="ic_prototype ic_prototype_trash" data-content-protect-cover="true" data-component-delete-button="true"></a> </span> </span><br></p>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <br/>
+      <div style="display: inline-flex; align-items: flex-end;">
+      <h6 style="font-weight: bolder">[상세 지출 내역]</h6>
+      <input type="button" id="detailAddBtn" style="margin-left: 10px;" th:value="추가" />
+      </div>
+      <div id="divCustomWrapper" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt; line-height: normal; margin-top: 10px; margin-bottom: 0px;">
+        <table id="dynamic_table1" class="detailSection" style="text-align: center; padding-top: 1px; padding-right: 1px; font-family: &quot;맑은 고딕&quot;, monospace;  font-size: 10pt; border: 1px solid windowtext;  width: 95%;" >
+          <colgroup>
+            <col width="20%">
+            <col width="40%">
+            <col width="30%">
+            <col width="10%">
+          </colgroup>
+          <tbody>
+          <tr>
+            <th><th:block th:text="${purchaseFieldNames[2]}"/></th>
+            <th><th:block th:text="${purchaseFieldNames[3]}"/></th>
+            <th><th:block th:text="${purchaseFieldNames[4]}"/></th>
+
+          </tr>
+          <tbody id="detailInput">
+
+          </tbody>
+        </table>
+      </div>
+
+
+      <p style="width:95%;"><input type="button" th:value="제출" id="pageSubmit" style="float: right; margin-top: 15px; width:120px;"></p>
+    </form>
+
+  </div>
+<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+
+  document.addEventListener("DOMContentLoaded", function() {
+    var documentNumElement = document.getElementById("documentNum");
+    documentNumElement.style.display = "none";
+  });
+
+  $(document).ready(function(){
+    document.getElementById('detailAddBtn').click();
+  });
+
+  var num = 1;
+  var detailInput = $('#detailInput');
+  var totalAmountInput = $('#totalAmount');
+  var totalAmount = 0;
+  $('#detailAddBtn').click(function (){
+    detailInput.append("  <tr class='trClass'>" +
+            "    <td>" +
+            "      <select>" +
+            "        <option value=\"물품구입비\">물품구입비</option>" +
+            "        <option value=\"출장비\">출장비</option>" +
+            "        <option value=\"식비\">식비</option>" +
+            "        <option value=\"교통비\">교통비</option>" +
+            "        <option value=\"기타\">기타</option>" +
+            "      </select>" +
+            "    </td>" +
+            "    <td><input type=\"text\" class=\"amountInput\"></td>" +
+            "    <td><input type=\"text\"></td>" +
+            "    <td><input type='button' class='removeDetail' value='삭제'  style='margin: auto; display: block; width: 95%; font-size:13px;height: 30px;'/></td>" +
+            "  </tr>");
+    num++;
+  });
+  detailInput.on('input', '.amountInput', function () {
+    updateTotalAmount();
+  });
+  function updateTotalAmount() {
+    totalAmount = 0;
+    detailInput.find('.amountInput').each(function () {
+      var amount = parseInt($(this).val()) || 0;
+      totalAmount += amount;
+    });
+    totalAmountInput.val(totalAmount);
+  }
+
+  $(document).on("click", ".removeDetail", function(){
+    if($('.trClass').length > 1){
+      $(this).closest("tr").remove();
+    }
+  });
+
+  $('#deptPick').change(function (){
+    $('.optionClass').css('display', 'none');
+    $('.empSelBox').val('pickMe').prop('selected', true);
+    var deptNo = $(this).val();
+
+    $('.optionClass').each(function (){
+      if ($(this).data('deptnum') == deptNo) {
+        $(this).css('display', '');
+      }
+    });
+  });
+
+  $('#addPerson').click(function (){
+    var deptNameSel = $('#deptPick option:selected').text();
+    var empName = $('.empSelBox option:selected').text();
+    var empNoSel = $('.empSelBox option:selected').data('empnum');
+    if (empName == "선택하세요") {
+      alert("사원을 선택하세요");
+    } else {
+      // $('#addPersonDiv').append("<div class='appendBox'><td>결재<hr style='color:#4f4f4f; margin:2px;' ><input data-empnosel="+empNoSel+" type=\"text\" value='"+empName+"("+deptNameSel+")"+"' readonly>" +
+      //         "      <input class='addPersonBtnClass' type='button' value='삭제' /><br></td></div>");
+      $('#addPersonDiv').append("<div class='appPersonBox' style='text-align: center;' '>결재<hr style='color:#4f4f4f; margin:2px;'> " +
+              "<div><input data-empnosel="+empNoSel+" type=\"text\" value='"+empName+"("+deptNameSel+")"+"' readonly style='text-align: center; width: 100px;padding: 2px; margin: 3px 0; border: 1px solid #fffefe; font-size: 12px;'></div>" +
+              "<input class='addPersonBtnClass' type='button' value='삭제' style='margin: auto; display: block; width: 100px; font-size:13px;' /><br></div> </div>");
+      // $('#addPersonDiv').append("<td style='text-align: center; border:0.5px solid #808080; width:110px;'><div>결재<hr style='color:#4f4f4f; margin:2px;'><input data-empnosel="+empNoSel+" type=\"text\" value='"+empName+"("+deptNameSel+")"+"' style='text-align: center; width: 100%;padding: 2px; margin: 3px 0; border: 1px solid #fffefe; font-size: 12px;' readonly>" +
+      //         "<hr style='color:#4f4f4f; margin:2px;'><input class='addPersonBtnClass' type='button' value='삭제' style='margin: auto; display: block; width: 95%; font-size:13px;' /></div></td>");
+    }
+  });
+  $(document).on("click", ".addPersonBtnClass", function(){
+    $(this).parent('div').remove();
+  });
+  // $(document).on("click", ".addPersonBtnClass", function(){
+  //   $(this).parent('div').remove();
+  // });
+
+  function hasDuplicates(array) {
+    return array.filter((value, index) => array.indexOf(value) !== index).length > 0;
+  }
+
+  $(document).on("click", "#pageSubmit", function (){
+    if (confirm("제출하시겠습니까?")) {
+
+      var empNoDataArray1 = [];
+      $('#addPersonDiv div div').each(function (){
+        var empNoData1 = $(this).children().first().data('empnosel');
+        empNoDataArray1.push(parseInt(empNoData1));
+
+      });
+
+      const hasDuplicate = hasDuplicates(empNoDataArray1);
+      if (hasDuplicate) {
+        alert("결재선에 같은 사람이 여러명 입니다")
+        return false;
+      }
+
+      if (empNoDataArray1.includes(parseInt($("input[name=author]").val()))) {
+        alert("결재선에 내가 포함되어 있습니다");
+        return false;
+      }
+
+      var insertedKey = 0;
+      var basic = {
+        approvalDate : $("input[name=approvalDate]").val(),
+        title : $("input[name=title]").val(),
+        creationDate : $("input[name=creationDate]").val(),
+        empNum : $("input[name=author]").val(),
+        documentNum : $("input[name=documentNum]").val(),
+      }
+      var jsonData = JSON.stringify(basic)
+      $.ajax({
+        data: jsonData,
+        url: "/form/purchaseBasic",
+        type: "POST",
+        contentType: "application/json",
+        success: function (data) {
+          insertedKey = data;
+
+          var empNoDataArray = [];
+          empNoDataArray.push(parseInt(insertedKey));
+          $('#addPersonDiv div').each(function (){
+            var empNoData = $(this).children().first().data('empnosel');
+            if (empNoData !== undefined && empNoData !== null) {
+              empNoDataArray.push(parseInt(empNoData));
+              console.log(empNoData);
+            }
+          });
+
+          console.log("---------------------");
+          $.ajax({
+            data: JSON.stringify({ empNoData: empNoDataArray }),
+            url: "/form/addPerson",
+            type: "POST",
+            contentType: "application/json",
+            success: function (data) {
+              console.log(data);
+              var purchaseVO1 = {
+                approvalNum : insertedKey,
+                documentNum : $('#documentNum').val(),
+                total : $("input[name=totalAmount]").val(),
+              };
+              var purchaseVO2 = {
+                approvalNum : insertedKey,
+                documentNum : $('#documentNum').val(),
+                reason : $("textarea[name=reason]").val(),
+              };
+              var purchaseArray = [purchaseVO1, purchaseVO2];
+              var jsonDataPur = JSON.stringify(purchaseArray);
+              $.ajax({
+                data: jsonDataPur,
+                url: "/form/addPurchase",
+                type: "POST",
+                contentType: "application/json",
+                success: function (data) {
+
+                  var purchaseVOeachArray = [];
+                  var purchaseVOeachArrayList = [];
+                  $('.trClass').each(function () {
+
+                    var purchaseVO11 = {
+                      approvalNum : insertedKey,
+                      documentNum : $('#documentNum').val(),
+                      fieldValue : $(this).children().children().eq(0).val(),
+                      fieldValue2 : $(this).children().children().eq(1).val(),
+                      fieldValue3 :$(this).children().children().eq(2).val(),
+                    }
+                    purchaseVOeachArray.push(purchaseVO11)
+                    purchaseVOeachArrayList.push(purchaseVOeachArray);
+                    console.log("purchaseVoArray" + purchaseVOeachArray);
+                    console.log(purchaseVOeachArrayList)
+                  })
+                    // var addDetailVO = {
+                    //   approvalNum : insertedKey,
+                    //   documentNum : $('#documentNum').val(),
+                    //   categoryKey : $('#documentNum').data('categorykey'),
+                    //   category : $(this).children().children().eq(0).val(),
+                    //   costKey : $('#documentNum').data('costkey'),
+                    //   cost : $(this).children().children().eq(1).val(),
+                    //   detailKey : $('#documentNum').data('detailkey'),
+                    //   detail : $(this).children().children().eq(2).val(),
+                    // }
+                    var jsonData1 = JSON.stringify(purchaseVOeachArray);
+
+                    $.ajax({
+                      data: jsonData1,
+                      url: "/form/addDetail",
+                      type: "POST",
+                      contentType: "application/json",
+                      success: function (data) {
+                        $('#pageForm').submit();
+                      },
+                      error: function() {
+                        alert("4 Error occurred");
+                      }
+                    });
+                },
+                error: function() {
+                  alert("3 add purchase Error occurred");
+                }
+              });
+            },
+            error: function() {
+              alert("2 Error occurred");
+            }
+          });
+        },
+        error: function() {
+          alert("날짜 입력을 확인해주세요");
+        }
+      });
+    } else {
+      return false;
+    }
+
+  });
+
+  // $(document).on("click", "#detailSubmit", function (){
+  //   $('.trClass').each(function () {
+  //     // console.log($(this).children().children().eq(0).val());
+  //     // console.log($(this).children().children().eq(1).val());
+  //     // console.log($(this).children().children().eq(2).val());
+  //     var addDetailVO = {
+  //       approvalNum : insertedKey,
+  //       documentNum : $('#documentNum').val(),
+  //       category : $(this).children().children().eq(0).val(),
+  //       cost : $(this).children().children().eq(1).val(),
+  //       detail : $(this).children().children().eq(2).val(),
+  //     }
+  //     var jsonData1 = JSON.stringify(addDetailVO);
+  //     console.log(addDetailVO);
+  //
+  //     $.ajax({
+  //       data: jsonData1,
+  //       url: "/form/addDetail",
+  //       type: "POST",
+  //       contentType: "application/json",
+  //       success: function (data) {
+  //         console.log(data);
+  //       },
+  //       error: function() {
+  //         alert("Error occurred");
+  //       }
+  //     });
+  //   })
+  // });
+
+</script>
+</div>
+</body>
+</html>

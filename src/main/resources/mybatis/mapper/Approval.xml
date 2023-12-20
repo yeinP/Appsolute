@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solution.appsolute.approval.dao.ApprovalDao">
+
+    <resultMap id="deptResultMap" type="com.solution.appsolute.approval.dto.Dept">
+        <result property="deptNo" column="dept_no"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="deptBranch" column="dept_branch"/>
+        <result property="deptLoc" column="dept_loc"/>
+    </resultMap>
+
+    <resultMap id="empResultMap" type="com.solution.appsolute.approval.dto.Employee">
+        <result property="empNum" column="emp_num"/>
+        <result property="deptNo" column="dept_no"/>
+        <result property="empEmail" column="emp_email"/>
+        <result property="empHireDate" column="emp_hire_date"/>
+        <result property="empLeader" column="emp_leader"/>
+        <result property="empMgr" column="emp_mgr"/>
+        <result property="empName" column="emp_name"/>
+        <result property="empPassword" column="emp_password"/>
+        <result property="empPhone" column="emp_phone"/>
+        <result property="empPosition" column="emp_position"/>
+    </resultMap>
+
+    <resultMap id="documentResultMap" type="com.solution.appsolute.approval.dto.Document">
+        <result property="documentNum" column="document_num"/>
+        <result property="documentName" column="document_name"/>
+    </resultMap>
+
+    <resultMap id="approvalResultMap" type="com.solution.appsolute.approval.dto.Approval">
+        <result property="approvalNum" column="approval_num"/>
+        <result property="appCheck" column="app_check"/>
+        <result property="approvalDate" column="approval_date"/>
+        <result property="appContent" column="app_content"/>
+        <result property="appDel" column="app_del"/>
+        <result property="appTitle" column="app_title"/>
+        <result property="documentNum" column="document_num"/>
+        <result property="empNum" column="emp_num"/>
+        <result property="lineNum" column="line_num"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="creationDate" column="creation_date"/>
+    </resultMap>
+
+    <resultMap id="purchaseEmp" type="com.solution.appsolute.approval.dto.PurchaseEmp">
+        <result property="approvalNum" column="approval_num"/>
+        <result property="empNum" column="emp_num"/>
+        <result property="empName" column="emp_name"/>
+        <result property="deptNo" column="dept_no"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="empPosition" column="emp_position"/>
+    </resultMap>
+
+    <resultMap id="approvalDetailResultMap" type="com.solution.appsolute.approval.dto.ApprovalDetail">
+        <result property="approvalDetailNum" column="approval_detail_num"/>
+        <result property="empCheckNum" column="emp_check_num"/>
+        <result property="appDetailSeq" column="app_detail_seq"/>
+        <result property="checkDate" column="check_date"/>
+        <result property="approvalLineNum" column="approval_line_num"/>
+        <result property="approvalNum" column="approval_num"/>
+        <result property="approvalStatus" column="approval_status"/>
+        <result property="rejectReason" column="reject_reason"/>
+    </resultMap>
+
+    <resultMap id="approvalContentResultMap" type="com.solution.appsolute.approval.dto.ApprovalContent">
+        <result property="appContentNum" column="app_content_num"/>
+        <result property="approvalNum" column="approval_num"/>
+        <result property="documentNum" column="document_num"/>
+        <result property="fieldValue" column="field_value"/>
+        <result property="fieldValue2" column="field_value2"/>
+        <result property="fieldValue3" column="field_value3"/>
+    </resultMap>
+
+    <select id="find" resultType="java.util.Map">
+        select * from approval
+    </select>
+
+    <select id="deptList" resultMap="deptResultMap">
+        select * from dept
+    </select>
+
+    <select id="empList" resultMap="empResultMap">
+        select * from employee
+    </select>
+
+    <insert id="insertApp" parameterType="com.solution.appsolute.approval.dto.Basic">
+        <selectKey keyProperty="approvalNum" resultType="java.lang.Long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into approval values
+        (null, 0, #{approvalDate} , 1, 0, #{title},#{documentNum}, #{empNum}, #{lineNum}, now(), #{creationDate})
+    </insert>
+
+    <insert id="addPerson" parameterType="com.solution.appsolute.approval.dto.AddPersonVO">
+        insert into approval_detail values
+        (null, #{empCheckNum}, #{sequence}, null, 0, #{approvalNum}, 0, null)
+    </insert>
+
+    <insert id="addDetail" parameterType="com.solution.appsolute.approval.dto.AddDetailVO">
+        insert into approval_content_detail values
+            (null, #{approvalNum}, #{documentNum}, #{documentNum}, #{documentNum})
+    </insert>
+
+    <select id="purchaseFieldNames" resultType="String">
+        SELECT dd.field_name
+        FROM document d
+                 inner join document_detail dd ON d.document_num = dd.document_num
+        where d.document_num = 1
+    </select>
+
+    <insert id="addPurchaseDetail" parameterType="com.solution.appsolute.approval.dto.PurchaseVO">
+        insert into approval_content_detail values
+            (null, #{approvalNum}, #{documentNum}, #{fieldValue}, #{fieldValue2}, #{fieldValue3}, #{total}, #{reason})
+    </insert>
+
+    <select id="approvalOne" resultMap="approvalResultMap" parameterType="int">
+        select * from approval where approval_num = #{param}
+    </select>
+
+    <select id="purchaseEmp" resultMap="purchaseEmp" parameterType="int">
+        SELECT a.approval_num, e.emp_num, e.emp_name, e.emp_position, e.dept_no, d.dept_name FROM approval a
+            JOIN employee e ON a.emp_num = e.emp_num
+            JOIN dept d ON e.dept_no = d.dept_no
+        WHERE a.approval_num = #{param};
+    </select>
+
+    <select id="approvalDetailOne" resultMap="approvalDetailResultMap" parameterType="int">
+        select * from approval_detail where approval_num = #{param}
+    </select>
+
+    <select id="approvalContentOne" resultMap="approvalContentResultMap" parameterType="int">
+        select * from approval_content_detail where approval_num = #{param}
+    </select>
+
+    <select id="lastKey" resultType="int">
+        select max(approval_num) from approval
+    </select>
+
+    <select id="findMyApproval" resultMap="approvalResultMap" parameterType="long">
+        select * from approval where emp_num = #{param} order by approval_num desc
+    </select>
+
+    <select id="approvalStatus" resultMap="approvalDetailResultMap" parameterType="int">
+        select * from approval_detail where approval_num = #{param1} and approval_status = #{param2}
+    </select>
+
+    <select id="completedApproval" resultMap="approvalResultMap" parameterType="int">
+        select * from approval where approval_num = #{param} and app_check = 1
+    </select>
+
+    <select id="includedMe" resultMap="approvalDetailResultMap" parameterType="long">
+        select * from approval_detail where emp_check_num = #{param};
+    </select>
+
+    <select id="selectApprovalDetailNum" resultType="int" parameterType="long">
+        select approval_detail_num from approval_detail
+        where approval_num = #{param1} and emp_check_num = #{param2}
+    </select>
+
+    <update id="empCheckUpdate" parameterType="long">
+        update approval_detail set approval_status = #{param1}
+        where approval_detail_num = #{param2}
+    </update>
+
+    <update id="approvalCheckUpdate" parameterType="int">
+        update approval set app_check = #{param1} where approval_num = #{param2}
+    </update>
+
+<!--    <insert id="addGeneral" parameterType="String">-->
+<!--        insert into approval_content_detail values-->
+<!--            (null, #{approvalNum}, #{documentNum}, #{documentNum}, #{documentNum})-->
+<!--    </insert>-->
+    <select id="prevDetail" resultMap="approvalDetailResultMap" parameterType="int">
+        select * from approval_detail where approval_detail_num = #{param}
+    </select>
+</mapper>

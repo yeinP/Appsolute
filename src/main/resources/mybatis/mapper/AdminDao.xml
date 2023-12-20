@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solution.appsolute.admin.dao.repository.AdminMapper">
+    <select id="listEmpAnnual" resultType="java.util.Map">
+    SELECT *
+    FROM employee
+    WHERE
+            (DATEDIFF(CURDATE(), emp_hire_date) &lt; 365
+                AND DAY(emp_hire_date) = DAY(CURDATE())
+      AND MONTH(emp_hire_date) != MONTH(CURDATE())
+        )
+       OR
+        (DATEDIFF(CURDATE(), emp_hire_date) &gt;= 365
+      AND DAY(emp_hire_date) = DAY(CURDATE())
+      AND MONTH(emp_hire_date) = MONTH(CURDATE()))
+    ORDER BY emp_hire_date DESC
+        LIMIT #{param1}, #{param2}
+</select>
+
+    <select id="countAnnualList" resultType="Integer">
+        select count(*) as total
+        from (SELECT *
+              FROM employee
+              WHERE
+                      (DATEDIFF(CURDATE(), emp_hire_date) &lt; 365
+                          AND DAY(emp_hire_date) = DAY(CURDATE())
+            AND MONTH(emp_hire_date) != MONTH(CURDATE())
+        )
+        OR
+        (DATEDIFF(CURDATE(), emp_hire_date) &gt;= 365
+        AND DAY(emp_hire_date) = DAY(CURDATE())
+        AND MONTH(emp_hire_date) = MONTH(CURDATE()))
+        ORDER BY emp_hire_date
+            ) as result ;
+    </select>
+    <select id="listAllEmployee" resultType="java.util.Map">
+        SELECT * FROM employee ORDER BY emp_hire_date DESC
+            LIMIT #{param1}, #{param2}
+    </select>
+
+    <select id="countListAllEmployee" resultType="Integer">
+        select count(*) as total
+        from ( SELECT * FROM employee ORDER BY emp_hire_date DESC
+           ) as result ;
+    </select>
+
+</mapper>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table {
+            height:60px;
+            text-align: center;
+            width:95%;
+            margin: auto;
+            margin-top: 10px;
+        }
+
+        h6 {
+            font-weight: 600;
+            font-size: 18px;
+        }
+        table th {
+            border-top: 1px solid #abb0b4;
+            border-bottom: 1px solid #abb0b4;
+
+        }
+
+
+        .btnLike {
+            display: inline-block;
+            padding: 3px 10px;
+            font-size: 14px;
+            color: #ffffff;
+            background-color: rgba(127, 197, 69);
+            border: 1px solid rgba(127, 197, 69);
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            transition-duration: 0.4s;
+            overflow: hidden;
+        }
+        .btnLike2 {
+            display: inline-block;
+            padding: 3px 10px;
+            font-size: 14px;
+            color: #ffffff;
+            background-color: rgba(69, 139, 197);
+            border: 1px solid rgba(69, 152, 197);
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            transition-duration: 0.4s;
+            overflow: hidden;
+        }
+        .btnLike3 {
+            display: inline-block;
+            padding: 3px 10px;
+            font-size: 14px;
+            color: #ffffff;
+            background-color: rgba(183, 57, 57);
+            border: 1px solid rgba(183, 57, 57);
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            transition-duration: 0.4s;
+            overflow: hidden;
+        }
+
+        .tableBox {
+            max-height: 200px; /* 원하는 높이로 설정 */
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container" style="margin-top: 50px;">
+        <h1 class="centered-text" style="font-weight: bold;">받은 결재함</h1>
+        <hr>
+    <div class="ing">
+    <h6>결재 대기 문서</h6>
+        <div class="tableBox">
+    <table>
+        <colgroup>
+            <col width="20%">
+            <col width="20%">
+            <col width="40%">
+            <col width="15%">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>기안일</th>
+            <th>문서구분</th>
+            <th>제목</th>
+            <th>결재상태</th>
+        </tr>
+        <th:block th:each="pendingApproval : ${pendingApproval}">
+            <tr>
+                <th:block th:each="titleApproval : ${titleApproval}">
+                    <td th:if="${titleApproval.approvalNum == pendingApproval.approvalNum}" >
+                        [[${#dates.format(titleApproval.approvalDate, 'yyyy-MM-dd')}]]
+                    </td>
+                    <td th:if="${titleApproval.approvalNum == pendingApproval.approvalNum}" >
+                        <span th:switch="${titleApproval.documentNum}">
+                            <span th:case="1">지출결의서</span>
+                            <span th:case="2">일반기안서</span>
+                            <span th:case="3">연차신청서</span>
+                           </span>
+                    </td>
+                    <td th:if="${titleApproval.approvalNum == pendingApproval.approvalNum}" >
+                        <a th:href="@{'/approval/' + ${pendingApproval.approvalNum}}">
+                            [[${titleApproval.appTitle}]]
+                        </a>
+                    </td>
+                    <td th:if="${titleApproval.approvalNum == pendingApproval.approvalNum}" >
+                        <span class="btnLike">결재대기</span>
+                    </td>
+                </th:block>
+            </tr>
+        </th:block>
+    </table>
+        </div>
+</div>
+        <div class="complete">
+    <h6>승인 완료 문서</h6>
+            <div class="tableBox">
+    <table>
+        <colgroup>
+            <col width="20%">
+            <col width="20%">
+            <col width="40%">
+            <col width="15%">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>기안일</th>
+            <th>문서구분</th>
+            <th>제목</th>
+            <th>결재상태</th>
+        </tr>
+        </thead>
+        <th:block th:each="checkedApproval : ${checkedApproval}">
+            <tr>
+                <th:block th:each="titleApproval : ${titleApproval}">
+                    <td th:if="${titleApproval.approvalNum == checkedApproval.approvalNum}">
+                        [[${#dates.format(titleApproval.approvalDate, 'yyyy-MM-dd')}]]
+                    </td>
+                    <td th:if="${titleApproval.approvalNum == checkedApproval.approvalNum}">
+                    <span th:switch="${titleApproval.documentNum}">
+                        <span th:case="1">지출결의서</span>
+                        <span th:case="2">일반 기안서</span>
+                        <span th:case="3">연차신청서</span>
+                    </span>
+                    </td>
+                    <td th:if="${titleApproval.approvalNum == checkedApproval.approvalNum}" >
+                        <a th:href="@{'/approval/' + ${checkedApproval.approvalNum}}">
+                        [[${titleApproval.appTitle}]]
+                        </a>
+                    </td>
+                    <td th:if="${titleApproval.approvalNum == checkedApproval.approvalNum}">
+                        <span class="btnLike2">결재완료</span>
+                    </td>
+                </th:block>
+            </tr>
+        </th:block>
+    </table>
+            </div>
+</div>
+
+        <div class="cancelApp">
+    <h6>반려 문서</h6>
+            <div class="tableBox">
+    <table>
+        <colgroup>
+            <col width="20%">
+            <col width="20%">
+            <col width="40%">
+            <col width="15%">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>기안일</th>
+            <th>문서구분</th>
+            <th>제목</th>
+            <th>결재상태</th>
+        </tr>
+        </thead>
+        <th:block th:each="rejectedApproval : ${rejectedApproval}">
+            <tr>
+                <th:block th:each="titleApproval : ${titleApproval}">
+                    <td th:if="${titleApproval.approvalNum == rejectedApproval.approvalNum}">
+                    [[${#dates.format(titleApproval.approvalDate, 'yyyy-MM-dd')}]]
+                    </td>
+                    <td th:if="${titleApproval.approvalNum == rejectedApproval.approvalNum}">
+                <span th:switch="${titleApproval.documentNum}">
+                    <span th:case="1">지출결의서</span>
+                    <span th:case="2">일반 기안서</span>
+                    <span th:case="3">연차신청서</span>
+                   </span>
+                    </td>
+                    <td th:if="${titleApproval.approvalNum == rejectedApproval.approvalNum}">
+                        <a th:href="@{'/approval/' + ${rejectedApproval.approvalNum}}">
+                            [[${titleApproval.appTitle}]]
+                        </a>
+                    </td>
+                    <td th:if="${titleApproval.approvalNum == rejectedApproval.approvalNum}">
+                        <span class="btnLike3">결재반려</span>
+                    </td>
+                </th:block>
+            </tr>
+        </th:block>
+    </table>
+            </div>
+</div>
+<!--<div>-->
+<!--    <h3>내가 승인한 문서의 진행상황</h3>-->
+<!--    <th:block th:each="myApproval : ${myApproval}">-->
+<!--        <div th:if="${myApproval.appCheck == 2}">-->
+<!--            <a th:href="@{'/approval/' + ${myApproval.approvalNum}}">-->
+<!--                <p th:text="${myApproval.appTitle}"></p>-->
+<!--            </a>-->
+<!--        </div>-->
+<!--    </th:block>-->
+<!--</div>-->
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>지출결의서</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+<style>
+
+    /*.container {*/
+    /*    background-color: ghostwhite;*/
+    /*    border-radius: 5px;*/
+    /*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+    /*    padding: 20px;}*/
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .centered-text {
+        font-weight: bold;
+    }
+
+    .deptInfo-table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .deptInfo-table th, .deptInfo-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .deptInfo-table tbody tr:hover {
+        background-color: #ececec;
+    }
+
+    form {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    select, input[type="text"], textarea {
+        width: 100%;
+        padding: 8px;
+        margin: 6px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    input[type="submit"] {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    input[type="checkbox"].chBox {
+        width: 15px;
+        height: 15px;
+    }
+
+    input[type="checkbox"][name="allcheck"] {
+        width: 15px;
+        height: 15px;
+    }
+
+    ul {
+        list-style: none;
+    }
+
+    li {
+        float: left;
+    }
+
+</style>
+<body>
+<div layout:fragment="content">
+    <div class="container" style="margin-top: 50px">
+        <h1 class="centered-text" style="font-weight: bold">지출 결의서 발송 완료</h1>
+        <hr>
+        <br>
+
+        <table>
+            <th:block th:each="approvalDetail : ${approvalDetailOne}">
+
+                <tr>
+                    <td style="font-weight: bold">결재 사원 번호&nbsp;:&nbsp;&nbsp;&nbsp;</td>
+                    <td th:text="${approvalDetail.empCheckNum}"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold">결재 시퀀스&nbsp;:&nbsp;&nbsp;&nbsp;</td>
+                    <td th:text="${approvalDetail.appDetailSeq}"></td>
+                </tr>
+
+                <tr>
+                    <td style="font-weight: bold">결재 상태&nbsp;:&nbsp;&nbsp;&nbsp;</td>
+                    <td th:text="${approvalDetail.approvalStatus}"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold">반려 사유&nbsp;:&nbsp;&nbsp;&nbsp;</td>
+                    <td th:text="${approvalDetail.rejectReason}"></td>
+                </tr>
+            </th:block>
+
+        </table>
+        <br>
+        <hr>
+        <br>
+        <th:block th:each="approvalContent : ${approvalContentOne}">
+
+            <th:block th:text="${approvalContent.fieldKey}"></th:block>
+            <th:block th:text="${approvalContent.fieldValue}"></th:block><br>
+
+        </th:block>
+    </div>
+<!--    <br>-->
+<!--    <hr>-->
+<!--    <br>-->
+<!--    <th:block th:each="approvalContent : ${approvalContentOne}">-->
+
+<!--        <th:block th:text="${approvalContent.fieldKey}"></th:block>-->
+<!--        <th:block th:text="${approvalContent.fieldValue}"></th:block><br>-->
+
+<!--    </th:block>-->
+</div>
+</body>
+</html>

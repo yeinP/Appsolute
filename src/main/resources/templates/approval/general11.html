@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <Style>
+
+        /*.container {*/
+        /*    background-color: ghostwhite;*/
+        /*    border-radius: 5px;*/
+        /*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+        /*    padding: 20px;}*/
+
+        .deptList-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .deptList-table th, .deptList-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /*.deptList-table tr {*/
+        /*    background-color: #ffffff;*/
+        /*}*/
+
+        /*.deptList-table tr:nth-child(even) {*/
+        /*    background-color: #ffffff;*/
+        /*}*/
+
+        .deptList-table tbody tr:hover {
+            background-color: #ececec; /* 원하는 배경색 지정 */
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        label {
+            font-weight: bold;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="checkbox"].chBox {
+            width: 15px;
+            height: 15px;
+        }
+        input[type="checkbox"][name="allcheck"] {
+            width: 15px;
+            height: 15px;
+        }
+
+        ul {
+            list-style: none;
+        }
+        li {
+            float: left;
+        }
+
+        #documentNum {
+            display: none;
+        }
+
+    </Style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container"  style="margin-top: 50px">
+        <h1 class="centered-text" style="font-weight: bold">일반 기안서</h1>
+        <hr>
+        <br>
+<form action="/approval/generalSuccess" method="post" id="pageForm">
+    <div class="table1">
+        <table style="border: 1px solid rgb(0, 0, 0); font-family: malgun gothic,dotum,arial,tahoma; margin-top: 1px; border-collapse: collapse;height: 103px;"><!-- User -->
+            <tbody>
+            <tr>
+                <td style="width: 65px ;background: rgb(226, 226, 226); padding: 5px; border: 1px solid black; height: 18px; text-align: center; color: rgb(0, 0, 0); font-size: 12px; font-weight: bold; vertical-align: middle;">
+                    기안자
+                </td>
+                <td style="background: rgb(255, 255, 255); padding: 5px; border: 1px solid black; text-align: left; color: rgb(0, 0, 0); font-size: 12px; font-weight: normal; vertical-align: middle;">
+                    <span unselectable="on" contenteditable="false" class="comp_wrap" data-cid="0" data-dsl="{{label:draftUser}}" data-wrapper="" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;" data-value="" data-autotype=""><span class="comp_item" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;">[[${authInfo.emp_name}]]</span><span contenteditable="false" class="comp_active" style="display: none; font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"> <span class="Active_dot1"></span><span class="Active_dot2"></span> <span class="Active_dot3"></span><span class="Active_dot4"></span> </span> <span contenteditable="false" class="comp_hover" data-content-protect-cover="true" data-origin="0" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"> <a contenteditable="false" class="ic_prototype ic_prototype_trash" data-content-protect-cover="true" data-component-delete-button="true"></a> </span> </span>
+                </td>
+            </tr>
+            <tr>
+                <td style="background: rgb(226, 226, 226); padding: 5px; border: 1px solid black; height: 18px; text-align: center; color: rgb(0, 0, 0); font-size: 12px; font-weight: bold; vertical-align: middle;">
+                    부서
+                </td>
+                <td style="background: rgb(255, 255, 255); padding: 5px; border: 1px solid black; text-align: left; color: rgb(0, 0, 0); font-size: 12px; font-weight: normal; vertical-align: middle;">
+                    <span unselectable="on" contenteditable="false" class="comp_wrap" data-cid="1" data-dsl="{{label:draftDept}}" data-wrapper="" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;" data-value="" data-autotype=""><span class="comp_item" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;">[[${authInfo.dept_no}]]</span><span contenteditable="false" class="comp_active" style="display: none; font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"> <span class="Active_dot1"></span><span class="Active_dot2"></span> <span class="Active_dot3"></span><span class="Active_dot4"></span> </span> <span contenteditable="false" class="comp_hover" data-content-protect-cover="true" data-origin="1" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"> <a contenteditable="false" class="ic_prototype ic_prototype_trash" data-content-protect-cover="true" data-component-delete-button="true"></a> </span> </span>
+                </td>
+            </tr>
+            <tr>
+                <td style="background: rgb(226, 226, 226); padding: 5px; border: 1px solid black; height: 18px; text-align: center; color: rgb(0, 0, 0); font-size: 12px; font-weight: bold; vertical-align: middle;">
+
+                    기안일
+                </td>
+                <td style="background: rgb(255, 255, 255); padding: 5px; border: 1px solid black; text-align: left; color: rgb(0, 0, 0); font-size: 12px; font-weight: normal; vertical-align: middle;">
+                    <span unselectable="on" contenteditable="false" class="comp_wrap" data-cid="2" data-dsl="{{label:draftDate}}" data-wrapper="" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;" data-value="" data-autotype=""><span class="comp_item" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"><input type="date" name="approvalDate" /></span><span contenteditable="false" class="comp_active" style="display: none; font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"> <span class="Active_dot1"></span><span class="Active_dot2"></span> <span class="Active_dot3"></span><span class="Active_dot4"></span> </span> <span contenteditable="false" class="comp_hover" data-content-protect-cover="true" data-origin="2" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 9pt;"> <a contenteditable="false" class="ic_prototype ic_prototype_trash" data-content-protect-cover="true" data-component-delete-button="true"></a> </span> </span>
+                </td>
+            </tr>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+<div><a style="font-weight: bold">결재선</a> <br>
+
+
+    <select id="deptPick">
+        <option th:text="선택하세요"></option>
+        <th:block th:each="deptList : ${deptList}">
+            <option th:value="${deptList.deptNo}" th:text="${deptList.deptName}"></option>
+        </th:block>
+    </select>
+    <select th:class="empSelBox">
+        <option th:value="pickMe" th:text="선택하세요"></option>
+        <th:block th:each="empList : ${empList}">
+            <option th:class="optionClass" th:attr="data-deptnum=${empList.deptNo},data-empnum=${empList.empNum}" th:style="${'display:none'}" th:value="${empList.empNum}" th:text="${empList.empName}"></option>
+        </th:block>
+    </select><input type="button" th:id="addPerson" th:value="추가" class="btn btn-primary"/>
+    <div th:id="addPersonDiv">
+
+    </div><br><hr><br>
+</div>
+    <input type="hidden" th:value="${lastKey}" name="insertedKey">
+    <table>
+        <tr>
+            <td style="font-weight: bold">제목:</td>
+            <td><input type="text" name="title"/></td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold">작성일자:</td>
+            <td><input type="date" name="creationDate"/></td>
+        </tr>
+<!--        <tr>-->
+<!--            <td style="font-weight: bold">소속:</td>-->
+<!--            <td><input type="text" name="department"/></td>-->
+<!--        </tr>-->
+        <tr>
+            <td style="font-weight: bold">작성자:</td>
+            <td><input type="text" name="author"/></td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold">내용:</td>
+            <td><textarea name="content" rows="4"></textarea></td>
+        </tr>
+        <tr>
+<!--            <td style="font-weight: bold">문서번호:</td>-->
+            <td><input type="text" th:value="2" name="documentNum" th:id="documentNum" readonly/></td>
+        </tr>
+    </table>
+<br>
+<hr>
+    <p><input type="button" th:value="제출" id="pageSubmit" class="btn btn-success"></p>
+</form>
+    </div>
+<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var documentNumElement = document.getElementById("documentNum");
+        documentNumElement.style.display = "none";
+    });
+
+    $('#deptPick').change(function (){
+        $('.optionClass').css('display', 'none');
+        $('.empSelBox').val('pickMe').prop('selected', true);
+        var deptNo = $(this).val();
+
+        $('.optionClass').each(function (){
+            if ($(this).data('deptnum') == deptNo) {
+                $(this).css('display', '');
+            }
+        });
+    });
+
+    $('#addPerson').click(function (){
+        var deptNameSel = $('#deptPick option:selected').text();
+        var empName = $('.empSelBox option:selected').text();
+        var empNoSel = $('.empSelBox option:selected').data('empnum');
+        if (empName == "선택하세요") {
+            alert("사원을 선택하세요");
+        } else {
+            $('#addPersonDiv').append("<div>결재 : <input data-empnosel="+empNoSel+" type=\"text\" value='"+empName+"("+deptNameSel+")"+"' readonly>" +
+                "      <input class='addPersonBtnClass btn btn-danger' type='button' value='삭제' /><br></div>");
+        }
+    });
+
+    $(document).on("click", ".addPersonBtnClass", function(){
+        $(this).parent('div').remove();
+    });
+
+    function hasDuplicates(array) {
+        return array.filter((value, index) => array.indexOf(value) !== index).length > 0;
+    }
+
+    $(document).on("click", "#pageSubmit", function (){
+        if (confirm("제출하시겠습니까?")) {
+
+            var empNoDataArray1 = [];
+            $('#addPersonDiv div').each(function (){
+                var empNoData1 = $(this).children().first().data('empnosel');
+                empNoDataArray1.push(parseInt(empNoData1));
+                console.log(empNoData1);
+
+            });
+
+            const hasDuplicate = hasDuplicates(empNoDataArray1);
+            console.log(hasDuplicate); // true
+            if (hasDuplicate) {
+                alert("결재선에 같은 사람이 여러명 입니다")
+                return false;
+            }
+
+            if (empNoDataArray1.includes(parseInt($("input[name=author]").val()))) {
+                alert("결재선에 내가 포함되어 있습니다");
+                return false;
+            }
+
+            var insertedKey = 0;
+            var basic = {
+                approvalDate : $("input[name=approvalDate]").val(),
+                title : $("input[name=title]").val(),
+                creationDate : $("input[name=creationDate]").val(),
+                empNum : $("input[name=author]").val(),
+                documentNum : $("input[name=documentNum]").val(),
+            }
+            var jsonData = JSON.stringify(basic)
+            $.ajax({
+                data: jsonData,
+                url: "/form/purchaseBasic",
+                type: "POST",
+                contentType: "application/json",
+                success: function (data) {
+                    insertedKey = data;
+
+                    var empNoDataArray = [];
+                    empNoDataArray.push(parseInt(insertedKey));
+                    $('#addPersonDiv div').each(function (){
+                        var empNoData = $(this).children().first().data('empnosel');
+                        empNoDataArray.push(parseInt(empNoData));
+                        console.log(empNoData);
+                    });
+
+                    console.log("---------------------");
+                    $.ajax({
+                        data: JSON.stringify({ empNoData: empNoDataArray }),
+                        url: "/form/addPerson",
+                        type: "POST",
+                        contentType: "application/json",
+                        success: function (data) {
+                            console.log(data);
+                            //
+                            // var content = $("textarea[name=content]").val()
+                            //
+                            // $.ajax({
+                            //     data: JSON.stringify(content,insertedKey),
+                            //     url: "/form/addGeneral",
+                            //     type: "POST",
+                            //     contentType: "application/json",
+                            //     success: function (data) {
+                            //         console.log(data);
+                            //     },
+                            //     error: function() {
+                            //         alert("Error occurred");
+                            //     }
+                            // });
+
+
+
+
+
+                            $('#pageForm').submit();
+                        },
+                        error: function() {
+                            alert("2 Error occurred");
+                        }
+                    });
+                },
+                error: function() {
+                    alert("1 Error occurred");
+                }
+            });
+        } else {
+            return false;
+        }
+
+    });
+
+</script>
+</div>
+</body>
+</html>

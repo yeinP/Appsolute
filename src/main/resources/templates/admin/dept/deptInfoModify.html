@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <title>Title</title>
+    <Style>
+
+        /*.container {*/
+        /*    background-color: ghostwhite;*/
+        /*    border-radius: 5px;*/
+        /*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+        /*    padding: 20px;}*/
+
+        .deptInfoModify-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .deptInfoModify-table th, .deptInfoModify-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .deptInfoModify-table tr {
+            background-color: #ffffff;
+        }
+
+        .deptInfoModify-table tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+
+        .deptInfoModify-table tbody tr:hover {
+            background-color: #ececec; /* 원하는 배경색 지정 */
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        label {
+            font-weight: bold;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="checkbox"].chBox {
+            width: 15px;
+            height: 15px;
+        }
+        input[type="checkbox"][name="allcheck"] {
+            width: 15px;
+            height: 15px;
+        }
+
+        ul {
+            list-style: none;
+        }
+        li {
+            float: left;
+        }
+    </Style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container"  style="margin-top: 50px">
+        <h1 class="centered-text" style="font-weight: bold">부서 정보 수정</h1>
+        <hr>
+        <br>
+<form th:action="@{'/admin/dept/deptInfoModify/' + ${deptNo}}" method="post" th:object="${deptInfo}">
+    <table class="deptInfoModify-table" border="1">
+        <tbody><tr>
+            <td><label style="font-weight: bold;">부서 번호</label></td>
+            <td><input type="hidden" name="deptNo" th:value="*{deptNo}">[[${deptInfo.deptNo}]]</td>
+        </tr>
+        <tr>
+            <td><label style="font-weight: bold;">부서명</label></td>
+            <td><input type="text" name="deptName" th:value="*{deptName}"></td>
+        </tr>
+        <tr>
+            <td><label style="font-weight: bold;">부서 위치</label></td>
+            <td><input type="text" name="deptLoc" th:value="*{deptLoc}"></td>
+        </tr>
+        <tr>
+            <td><label style="font-weight: bold;">분류</label></td>
+            <td>
+                <select name="deptBranch" th:value="*{deptBranch}">
+                <option value="0">본사</option>
+                <option value="1">해외</option>
+                </select>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <input type="submit" th:value="수정하기">
+    <br><br>
+    <button class="btn btn-primary" >
+        <a th:href="@{/admin/dept/deptList}" style=" color: white; text-decoration: none">부서 목록으로</a>
+    </button>
+</form>
+    </div>
+</div>
+</body>
+</html>

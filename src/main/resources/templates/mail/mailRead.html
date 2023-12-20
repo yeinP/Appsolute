@@ -1,48 +1,199 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/basic.html}">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8" />
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css">-->
+    <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">-->
+    <!--    <link href="css/bootstrap.css" rel="stylesheet">-->
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+        .mail-links a {
+
+            padding: 10px 30px;
+            text-decoration: none;
+        }
+
+        .fixed-footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #212529;
+            padding: 10px 0 10px 220px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border: 1px solid #ddd;
+        }
+
+        .mail-table tr{
+            border-bottom: 1px solid lightgrey;
+        }
+
+        /* 스타일 테이블 셀 (td) */
+        table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .mail-table th, .mail-table td {
+            border: 1px solid #ddd;
+            padding: 5px;
+            text-align: left;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--bs-link-color);
+            text-decoration: underline;
+        }
+        a:hover {
+            color: var(--bs-link-hover-color);
+        }
+
+        /* 스타일 삭제 링크 */
+        /*.delete-link {*/
+        /*    text-decoration: none;*/
+        /*    color: red;*/
+        /*    font-weight: bold;*/
+        /*}*/
+
+        /* 스타일 버튼 */
+        /*.selectDelete_btn {*/
+        /*    background-color: #007BFF;*/
+        /*    color: white;*/
+        /*    border: none;*/
+        /*    padding: 5px 10px;*/
+        /*    cursor: pointer;*/
+        /*}*/
+
+        /* 스타일 메일 제목 */
+        .mail-title {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        input[type="checkbox"].chBox {
+            width: 15px;
+            height: 15px;
+        }
+
+        input[type="checkbox"][name="allcheck"] {
+            width: 15px;
+            height: 15px;
+        }
+
+        .delete-link:hover {
+            border-bottom: 2px solid #5c636a; /* 원하는 색상 및 두께로 설정하세요 */
+            cursor: pointer;
+        }
+
+        .selectDelete_btn:hover {
+            border-bottom: 2px solid #5c636a; /* 원하는 색상 및 두께로 설정하세요 */
+            cursor: pointer;
+        }
+
+    </style>
+    <!-- Custom styles for this template -->
+
+    <link href="static/css/headers.css" rel="stylesheet">
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/bootstrap.bundle.js"></script>
+    <script src="js/bootstrap.js"></script>
 </head>
 <body>
-<h1>메일 읽기</h1>
-<hr>
-<a href="/mail">전체 메일함</a>
-<a href="/mail/send">보낸 메일함</a>
-<a href="/mail/receive">받은 메일함</a>
-<a href="/mail/unread">안 읽은 메일함</a>
-<a href="/mail/write">메일 작성</a>
-<hr>
-<table  border="1" th:each="dto:${list}">
-    <tr>
-        <td th:colspan="2">
-        <a th:href="@{/mail/delete/{no}(no=${dto.mailNum})}">
-            삭제
-        </a>
-        </td>
-    </tr>
-    <tr>
-        <td>메일 제목</td>
-        <td>[[${dto.mailTitle}]]</td>
-    </tr>
-    <tr>
-        <td>보낸 사람</td>
-        <td>[[${dto.senderName}]]</td>
-    </tr>
-    <tr>
-        <td>받는 사람</td>
-        <td>[[${dto.receiverName}]]</td>
-    </tr>
-    <tr>
-        <td>작성 일시</td>
-        <td>[[${dto.mailDate}]]</td>
-    </tr>
-    <tr>
-        <td th:colspan="2">내용</td>
-    </tr>
-    <tr>
-        <td th:colspan="2">[[${dto.mailContent}]]</td>
-    </tr>
-</table>
+
+<div layout:fragment="content">
+    <div class="container" style="margin-top: 50px">
+        <th:block th:each="dto:${list}">
+            <div class="header" style="display: flex; align-items: flex-end;">
+                <h1 class="centered-text" style="font-weight: bold;">메시지 읽기</h1>
+                <a th:href="@{/mail/delete/{no}(no=${dto.mailNum})}" class="delete-link" style="text-decoration: none; color: #5c636a; margin-left: 10px;">
+                    삭제
+                </a>
+                <button type="button" id="mailNum" th:value="${dto.mailNum}" class="selectDelete_btn" style="background-color: white; border:0px; color: #5c636a; margin-left: 10px;">안읽음</button>
+            </div>
+            <hr style="margin:5px 0;">
+
+
+            <form>
+
+                <h5 style="font-weight: bold"> [[${dto.mailTitle}]]</h5>
+                <label for="sender" style="width:80px; font-weight: bold; padding: 3px; margin:5px 0 5px 0; font-size: 13px;">보낸 사람</label>
+                <span id="sender" style="border:1px solid #bdeaaa; border-radius: 14px; padding: 5px; font-size: 13px;">[[${dto.senderName}]]</span>
+                <br>
+                <label for="receiver" style="width:80px; font-weight: bold; padding: 3px; margin:5px 0 2px 0; font-size: 13px;">받는 사람</label>
+                <span id="receiver" style="border:1px solid #bdeaaa; border-radius: 14px; padding: 5px; font-size: 13px;">[[${dto.receiverName}]]</span>
+                <br>
+                <span style="padding: 5px; font-size: 14px;">[[${#temporals.format(dto.mailDate, 'yyyy-MM-dd HH:mm:ss')}]]</span>
+                <hr>
+                <div class="content">
+                    [[${dto.mailContent}]]
+                </div>
+            </form>
+        </th:block>
+<script type="text/javascript">
+
+
+    $(".selectDelete_btn").click(function () {
+        var num = $("#mailNum").val();
+        var confirmMessage = confirm("삭제하시겠습니까?");
+        if (!confirmMessage) {
+            return false;
+        } else {
+            $.ajax({
+                url: "/mail/change",
+                type: "POST",
+                data: {num},
+                success: function (result) {
+                    if (result == 1) {
+                        location.href = "/mail/receive";
+                    } else {
+                        alert("변경 실패");
+                    }
+
+                }
+            })
+        }
+    });
+
+</script>
+</div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="/js/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+<script src="/assets/demo/chart-area-demo.js"></script>
+<script src="/assets/demo/chart-bar-demo.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+<script src="/js/datatables-simple-demo.js"></script>
+<script src="/js/logout.js"></script>
+<script src="static/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

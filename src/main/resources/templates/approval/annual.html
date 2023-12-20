@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>휴가계획서</h1>
+<form action="/annualSuccess" method="post">
+    휴가 유형:
+    <select id="vacationType" name="vacationType">
+        <option value="annualLeave">연차</option>
+        <option value="halfDayLeave">반차</option>
+    </select>
+    <br>
+
+    시작일:
+    <input type="date" id="startDate" name="startDate" required>
+    <br>
+
+    종료일:
+    <input type="date" id="endDate" name="endDate" required>
+    <br>
+
+    휴가 사유:
+    <textarea id="reason" name="reason" rows="4" cols="50" required></textarea>
+    <br>
+
+    <input type="submit" value="휴가 신청">
+</form>
+</body>
+</html>

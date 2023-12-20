@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/basic.html}">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <style>
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+
+            .mail-links a {
+                padding: 10px 30px;
+                text-decoration: none;
+            }
+        /*    .container {*/
+        /*        background-color: ghostwhite;*/
+        /*    border-radius: 5px;*/
+        /*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+        /*    padding: 20px;*/
+        /*}*/
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        label {
+            font-weight: bold;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="checkbox"].chBox {
+            width: 15px;
+            height: 15px;
+        }
+        input[type="checkbox"][name="allcheck"] {
+            width: 15px;
+            height: 15px;
+        }
+
+        tr.bold-label td {
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container" style="margin-top: 100px">
+        <h1 class="centered-text" style="font-weight: bold;">사원 등록</h1>
+        <hr>
+        <br>
+        <form action="/admin/employee/register" method="post">
+            <table>
+                <tr class="bold-label">
+                    <td>이름</td>
+                    <td><input type="text" name="empName"></td>
+                </tr>
+                <tr class="bold-label">
+                    <td>핸드폰 번호</td>
+                    <td><input type="text" name="empPhone" id="empPhone"></td>
+                </tr>
+                <tr class="bold-label">
+                    <td>비밀번호</td>
+                    <td><input type="text" name="empPassword" id="empPassword"></td>
+                </tr>
+                <tr  class="bold-label">
+                    <td>부서</td>
+                    <td>
+                        <select name="deptNo" id="deptNoSelect">
+                            <option value="">선택</option>
+                            <th:block th:each="deptInfo : ${deptNameList}">
+                                <option th:value="${deptInfo[0]}" th:text="${deptInfo[1]}"></option>
+                            </th:block>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="bold-label">
+                    <td>직책</td>
+                    <td>
+                        <select name="empPosition" id="empPosition">
+                            <option value="0">선택</option>
+                            <option th:value="사원" th:text="사원"></option>
+                            <option th:value="대리" th:text="대리"></option>
+                            <option th:value="팀장" th:text="팀장"></option>
+                            <option th:value="과장" th:text="과장"></option>
+                            <option th:value="차장" th:text="차장"></option>
+                            <option th:value="부장" th:text="부장"></option>
+                            <option th:value="전무" th:text="전무"></option>
+                            <option th:value="대표" th:text="대표"></option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="bold-label">
+                    <td>팀장</td>
+                    <td><input type="text" id="empLeader" name="empLeader"></td>
+                </tr>
+            </table>
+            <br>
+            <input type="submit" value="등록">
+            <br><br>
+            <button class="btn btn-primary" >
+                <a th:href="@{/admin/employee/employeeList}" style=" color: white; text-decoration: none">사원 목록으로</a>
+            </button>
+
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // 핸드폰 번호로 비밀번호 자동 생성
+        document.getElementById('empPhone').addEventListener('input', function () {
+            let empPhone = this.value;
+            let empPassword = empPhone.slice(-4);
+            document.getElementById('empPassword').value = empPassword;
+        });
+
+        // 직책에 따라 팀장 설정
+        document.getElementById('empPosition').addEventListener('input', function () {
+            let selectEmpPosition = this.value;
+            let empLeader = document.getElementById('empLeader');
+
+            if (selectEmpPosition === '팀장') {
+                empLeader.value = 1;
+            } else {
+                empLeader.value = 0;
+            }
+        });
+
+        function PhoneConfirm(inputElement) {
+            let phoneNumber = inputElement.value;
+            let password = document.getElementById('empPassword');
+            if (!/^[0-9]+$/.test(phoneNumber)) {
+                alert('전화번호는 숫자로만 입력해주세요.');
+                password.value = '';
+            }
+        }
+
+        document.getElementById('empPhone').addEventListener('blur', function () {
+            let empPhone = document.getElementById('empPhone');
+            if (!PhoneConfirm(this)) {
+                inputElement.value = '';
+                empPhone.focus();
+            }
+        });
+
+        // 가입 확인
+        document.querySelector('input[type="submit"]').addEventListener('click', function (event) {
+            if (confirm('등록하시겠습니까?')) {
+                alert('등록 완료');
+                return true;
+            } else {
+                alert('취소');
+                return false;
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

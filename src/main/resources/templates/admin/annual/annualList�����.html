@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        /*.container {*/
+        /*    background-color: ghostwhite;*/
+        /*    border-radius: 5px;*/
+        /*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+        /*    padding: 20px;}*/
+
+        .annualList-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .annualList-table th, .annualList-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .annualList-table tr {
+            background-color: #ffffff;
+        }
+
+        .annualList-table tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+
+        .annualList-table tbody tr:hover {
+            background-color: #ececec; /* 원하는 배경색 지정 */
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        label {
+            font-weight: bold;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="checkbox"].chBox {
+            width: 15px;
+            height: 15px;
+        }
+        input[type="checkbox"][name="allcheck"] {
+            width: 15px;
+            height: 15px;
+        }
+
+        ul{
+            list-style: none;
+        }
+        li {
+            float: left;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container"  style="margin-top: 100px">
+        <h1 class="centered-text" style="font-weight: bold">휴가 관리</h1><br><br>
+
+<form action = "/admin/annual/annualList" method="get" id="searchForm">
+    <input type="hidden" name="page" value="1">
+    <select name="type" id="selectType">
+        <option value="empName" th:selected="${pageRequestDto.type == 'empName'}">사원 이름</option>
+        <option value="empNum" th:selected="${pageRequestDto.type == 'empNum'}">사원 번호</option>
+        <option value="empHireDate" th:selected="${pageRequestDto.type == 'empHireDate'}">입사일</option>
+    </select>
+    <div style="display: flex; align-items: center;">
+        <input type="text" id="textInput" name="keyword" th:value="${pageRequestDto.keyword}" placeholder="검색어를 입력하세요" style="flex: 1;">
+        <input type="date" id="dateInput" name="HireDate" max="2077-06-20" min="1950-01-01">
+        <button class="btn btn-primary btn-search" type="button" style="color: white; margin-left: 5px">검색</button>
+    </div>
+</form>
+        <br>
+<button class="btn btn-success updateBtn" type="button" style="color: white; text-decoration: none" onclick="updateSelectedEmployees()">연차 갱신</button>
+        <br><br>
+<table class="annualList-table">
+    <tr>
+        <th><input type="checkbox" id="checkAll" onclick="checkAll()"></th>
+        <th>사원 번호</th>
+        <th>사원 이름</th>
+        <th>사원 부서</th>
+        <th>입사일</th>
+        <th>연차 갯수</th>
+    </tr>
+    <tr th:each="annual : ${annualList.dtoList}">
+        <td><input type="checkbox" class="checkbox" id="checkUpdate" th:value="${annual.empNum}"></td>
+        <td th:text="${annual.empNum}"></td>
+        <td th:text="${annual.empName}"></td>
+        <td th:text="${annual.deptNo}"></td>
+        <td th:text="${#temporals.format(annual.empHireDate, 'yyyy-MM-dd')}"></td>
+        <td th:text="${annual.empAnnual}"></td>
+    </tr>
+</table>
+<div>
+    <ul>
+        <li th:if="${annualList.prev}">
+            <a th:href="@{/admin/annual/annualList(page = ${annualList.start -1}, type=${pageRequestDto.type}, keyword=${pageRequestDto.keyword}, hireDate=${pageRequestDto.hireDate})}" tabindex="-1">Previous</a>
+        </li>
+        <li th:class="'page-item' + ${annualList.page == page?'active' : ''}" th:each="page:${annualList.pageList}">
+            <a th:href="@{/admin/annual/annualList(page=${page}, type=${pageRequestDto.type}, keyword=${pageRequestDto.keyword}, hireDate=${pageRequestDto.hireDate})}">
+                [[${page}]]
+            </a>
+        </li>
+        <li th:if="${annualList.next}">
+            <a th:href="@{/admin/annual/annualList(page=${employeeList.end + 1}, type=${pageRequestDto.type}, keyword=${pageRequestDto.keyword}, hireDate=${pageRequestDto.hireDate})}">Next</a>
+        </li>
+    </ul>
+</div>
+
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.getElementById('dateInput').value = new Date().toISOString().substring(0, 10);
+
+    var searchForm = $("#searchForm");
+    $('.btn-search').click(function (e) {
+        searchForm.submit();
+    });
+
+    var typeSelect = document.querySelector('select[name="type"]');
+    var dateInput = document.getElementById('dateInput');
+    var textInput = document.getElementById('textInput');
+
+    changeInputType();
+
+    typeSelect.addEventListener('change', function () {
+        changeInputType();
+    });
+
+    function changeInputType() {
+        if (typeSelect.value === 'empHireDate') {
+            dateInput.style.display = 'block';
+            textInput.style.display = 'none';
+        } else {
+            dateInput.style.display = 'none';
+            textInput.style.display = 'block';
+        }
+    }
+
+    $(document).ready(function() {
+        $("#checkAll").click(function() {
+            if($("#checkAll").is(":checked")) $("input[id=checkUpdate]").prop("checked", true);
+            else $("input[id=checkUpdate]").prop("checked", false);
+        });
+
+        $("input[id=checkUpdate]").click(function() {
+            var total = $("input[id=checkUpdate]").length;
+            var checked = $("input[id=checkUpdate]:checked").length;
+
+            if(total != checked) $("#checkAll").prop("checked", false);
+            else $("#checkAll").prop("checked", true);
+        });
+    });
+
+    function updateSelectedEmployees() {
+        var empNums = [];
+        $("input[id=checkUpdate]:checked").each(function() {
+            empNums.push($(this).val());
+        });
+
+        if (empNums.length > 0) {
+            $.ajax({
+                type: "POST",
+                url: "/admin/annual/annualUpdate",
+                data: JSON.stringify(empNums),
+                contentType: "application/json",
+                success: function(response) {
+                    alert("연차가 갱신되었습니다.");
+                    window.location.href = "/admin/annual/annualList";
+                },
+                error: function(error) {
+                    alert("연차 갱신 중 오류가 발생했습니다.");
+                }
+            });
+        } else {
+            alert("업데이트할 항목을 선택하세요.");
+        }
+    }
+</script>
+</div>
+</body>
+</html>
+
