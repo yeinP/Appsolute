@@ -1,3 +1,4 @@
+2023.12.27 변경 완
 create database APPSOLUTE;
 
 create user 'APPSOLUTE'@'localhost' identified by 'APPSOLUTE';
