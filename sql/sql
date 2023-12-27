@@ -6,105 +6,139 @@ grant all privileges on APPSOLUTE.* to 'APPSOLUTE'@'localhost';
 create user 'APPSOLUTE'@'%' identified by 'APPSOLUTE';
 grant all privileges on APPSOLUTE.* to 'APPSOLUTE'@'%';
 
-CREATE TABLE DEPT(
-	DEPTNO INT PRIMARY KEY,
-    DEPTNAME VARCHAR(20) NOT NULL,
-    DEPTLOC VARCHAR(30) NOT NULL,
-    DEPTBRANCH INT NOT NULL DEFAULT 0
-);
+CREATE TABLE `dept` (
+  `dept_no` bigint NOT NULL AUTO_INCREMENT,
+  `dept_name` varchar(20) NOT NULL,
+  `dept_branch` int NOT NULL DEFAULT '0',
+  `dept_loc` varchar(30) NOT NULL,
+  PRIMARY KEY (`dept_no`)
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-CREATE TABLE EMPLOYEE(
-	EMPNUM INT auto_increment PRIMARY KEY,
-    EMPNAME VARCHAR(30) NOT NULL,
-    DEPTNO INT NOT NULL,
-    EMPPHONE VARCHAR(50) NOT NULL,
-    EMPEMAIL VARCHAR(100) NOT NULL,
-    EMPPASSWORD VARCHAR(50) NOT NULL,
-    EMPHIREDATE TIMESTAMP NOT NULL,
-    EMPPOSITION VARCHAR(20) NOT NULL,
-    EMPLEADER INT NOT NULL DEFAULT 0,
-    EMPMGR INT ,
-    FOREIGN KEY(DEPTNO) REFERENCES DEPT(DEPTNO)
-);
+CREATE TABLE `employee` (
+  `emp_num` bigint NOT NULL AUTO_INCREMENT,
+  `dept_no` bigint NOT NULL,
+  `emp_email` varchar(100) DEFAULT NULL,
+  `emp_hire_date` timestamp NULL DEFAULT NULL,
+  `emp_leader` int NOT NULL DEFAULT '0',
+  `emp_mgr` int DEFAULT NULL,
+  `emp_name` varchar(30) NOT NULL,
+  `emp_password` varchar(50) NOT NULL,
+  `emp_phone` varchar(50) NOT NULL,
+  `emp_position` varchar(20) NOT NULL,
+  `emp_annual` double(10,1) DEFAULT NULL,
+  `last_annual_update_date` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`emp_num`),
+  KEY `dept_no` (`dept_no`),
+  CONSTRAINT `dept_no` FOREIGN KEY (`dept_no`) REFERENCES `dept` (`dept_no`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-    CREATE TABLE notice (
-    noNum INT AUTO_INCREMENT PRIMARY KEY,
-    noTitle VARCHAR(255) NOT NULL,
-    noContent VARCHAR(1000) NOT NULL,
-    EMPNUM INT NOT NULL,
-    noRegdate TIMESTAMP NOT NULL,
-    noHits INT DEFAULT 0,
-    noImp INT DEFAULT 0,
-    FOREIGN KEY (EMPNUM) REFERENCES employee(EMPNUM)
-);
+CREATE TABLE `board` (
+  `board_id` bigint NOT NULL AUTO_INCREMENT,
+  `created_date` datetime(6) DEFAULT NULL,
+  `modified_date` datetime(6) DEFAULT NULL,
+  `content` varchar(1000) DEFAULT NULL,
+  `count_visit` bigint DEFAULT NULL,
+  `created_by` varchar(255) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `emp_num` bigint DEFAULT NULL,
+  PRIMARY KEY (`board_id`),
+  KEY `FKrc2dxlnh01f0m9kkc8rt3qu0n` (`emp_num`),
+  CONSTRAINT `FKrc2dxlnh01f0m9kkc8rt3qu0n` FOREIGN KEY (`emp_num`) REFERENCES `employee` (`emp_num`)
+) ENGINE=InnoDB AUTO_INCREMENT=125 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-CREATE TABLE REPLY (
-    RENum INT AUTO_INCREMENT PRIMARY KEY,
-    noNum int NOT NULL,
-    REContent VARCHAR(1000) NOT NULL,
-    RERegdate TIMESTAMP NOT NULL,
-    EMPNUM INT NOT NULL,
-    FOREIGN KEY (NONUM) REFERENCES NOTICE(NONUM),
-    FOREIGN KEY (EMPNUM) REFERENCES employee (empNum)
-);
-create table mail (
-   mailNum INT AUTO_INCREMENT PRIMARY KEY,
-    mailTitle varchar(100) not null,
-    mailContent varchar(500) not null,
-    mailDate TIMESTAMP,
-    MAILsender int not null,
-    MAILreciver int not null,
-    MAILCheck int default 0,
-    FOREIGN KEY (MAILsender) REFERENCES employee (empNum),
-    FOREIGN KEY (MAILreciver) REFERENCES employee (empNum)
-    );
+CREATE TABLE `board_comment` (
+  `board_comment_id` bigint NOT NULL AUTO_INCREMENT,
+  `content` varchar(255) DEFAULT NULL,
+  `created_by` varchar(255) DEFAULT NULL,
+  `created_date` datetime(6) DEFAULT NULL,
+  `delete_check` char(1) DEFAULT NULL,
+  `emp_num` bigint DEFAULT NULL,
+  `board_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`board_comment_id`),
+  KEY `FK4hdhh4hx0oa5m2wuw7j80tl09` (`emp_num`),
+  KEY `FKgnt8u6cg5gyw3qxntckhgwxty` (`board_id`),
+  CONSTRAINT `FK4hdhh4hx0oa5m2wuw7j80tl09` FOREIGN KEY (`emp_num`) REFERENCES `board` (`board_id`),
+  CONSTRAINT `FKgnt8u6cg5gyw3qxntckhgwxty` FOREIGN KEY (`board_id`) REFERENCES `employee` (`emp_num`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-CREATE TABLE APPROVAL(
-	APPROVALNUM INT AUTO_INCREMENT PRIMARY KEY,
-    EMPNUM INT NOT NULL,
-    APPCONTENT VARCHAR(1000) NOT NULL,
-    APPTITLE VARCHAR(500) NOT NULL,
-    APPCHECK INT DEFAULT 0,
-    LINENUM INT,
-    DOCUMENTNUM INT,
-    APPDEL INT DEFAULT 0,
-    FOREIGN KEY (EMPNUM) REFERENCES EMPLOYEE(EMPNUM),
-	FOREIGN KEY(DOCUMENTNUM) REFERENCES DOCUMENT(DOCUMENTNUM)
-);
+CREATE TABLE `mail` (
+  `mail_num` bigint NOT NULL AUTO_INCREMENT,
+  `mail_check` int DEFAULT NULL,
+  `mail_content` varchar(500) NOT NULL,
+  `mail_date` timestamp NULL DEFAULT NULL,
+  `mail_receiver` bigint NOT NULL,
+  `mail_sender` bigint NOT NULL,
+  `mail_title` varchar(100) NOT NULL,
+  PRIMARY KEY (`mail_num`)
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
- CREATE TABLE APPROVALDETAIL(
-	APPROVALDETAILNUM INT auto_increment PRIMARY KEY,
-    EMPCHECKNUM INT NOT NULL,
-    APPROVALLINENUM INT,
-    APPROVALSTATUS INT DEFAULT 0,
-    APPROVALDATE TIMESTAMP NOT NULL,
-    REJECTREASON VARCHAR(500) ,
-    APPDETAILSEQ INT NOT NULL,
-    APPROVALNUM INT NOT NULL,
-	FOREIGN KEY (EMPCHECKNUM) REFERENCES EMPLOYEE(EMPNUM),
-    FOREIGN KEY(APPROVALLINENUM) REFERENCES APPROVALLINE(LINENUM),
-    FOREIGN KEY(APPROVALNUM) REFERENCES APPROVAL(APPROVALNUM)
-);
 
-CREATE TABLE APPROVALLINE(
-	LINENUM INT AUTO_INCREMENT PRIMARY KEY,
-    EMPNUM INT NOT NULL,
-    LINENAME VARCHAR(50) NOT NULL,
-    LINEDEL INT DEFAULT 0,
-    FOREIGN KEY (EMPNUM) REFERENCES EMPLOYEE(EMPNUM)
-);
+CREATE TABLE `approval` (
+  `approval_num` bigint NOT NULL AUTO_INCREMENT,
+  `app_check` int DEFAULT '0',
+  `approval_date` timestamp NULL DEFAULT NULL,
+  `app_content` int NOT NULL,
+  `app_del` int DEFAULT '0',
+  `app_title` varchar(500) NOT NULL,
+  `document_num` bigint DEFAULT NULL,
+  `emp_num` bigint NOT NULL,
+  `line_num` bigint DEFAULT NULL,
+  `reg_date` timestamp NULL DEFAULT NULL,
+  `creation_date` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`approval_num`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-CREATE TABLE APPROVALLINEDETAIL (
-	LINEDETAILNUM INT AUTO_INCREMENT PRIMARY KEY,
-    LINENUM INT NOT NULL,
-    EMPCHECKNUM INT,
-    LINEDETAILSEQ INT ,
-    FOREIGN KEY (LINENUM) REFERENCES APPROVALLINE(LINENUM),
-    FOREIGN KEY (EMPCHECKNUM) REFERENCES EMPLOYEE(EMPNUM)
-);
+CREATE TABLE `approval_detail` (
+  `approval_detail_num` bigint NOT NULL AUTO_INCREMENT,
+  `emp_check_num` bigint DEFAULT NULL,
+  `app_detail_seq` int NOT NULL,
+  `check_date` timestamp NULL DEFAULT NULL,
+  `approval_line_num` bigint DEFAULT NULL,
+  `approval_num` bigint NOT NULL,
+  `approval_status` int DEFAULT '0',
+  `reject_reason` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`approval_detail_num`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-CREATE TABLE DOCUMENT(
-	DOCUMENTNUM INT AUTO_INCREMENT PRIMARY KEY,
-    DOCUMENTNAME VARCHAR(100) NOT NULL
-);
+CREATE TABLE `approval_line` (
+  `line_num` bigint NOT NULL AUTO_INCREMENT,
+  `emp_num` bigint NOT NULL,
+  `line_del` int DEFAULT '0',
+  `line_name` varchar(50) NOT NULL,
+  PRIMARY KEY (`line_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
+CREATE TABLE `approval_line_detail` (
+  `line_detail_num` bigint NOT NULL AUTO_INCREMENT,
+  `line_num` bigint NOT NULL,
+  `employee` bigint NOT NULL,
+  `line_detail_seq` int NOT NULL,
+  PRIMARY KEY (`line_detail_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `document` (
+  `document_num` bigint NOT NULL AUTO_INCREMENT,
+  `document_name` varchar(255) NOT NULL,
+  PRIMARY KEY (`document_num`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `document_detail` (
+  `document_num` bigint NOT NULL,
+  `document_detail_num` int NOT NULL AUTO_INCREMENT,
+  `field_name` varchar(255) NOT NULL,
+  `format` int DEFAULT NULL,
+  PRIMARY KEY (`document_detail_num`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
+CREATE TABLE `approval_content_detail` (
+  `app_content_num` int NOT NULL AUTO_INCREMENT,
+  `approval_num` bigint NOT NULL,
+  `document_num` bigint NOT NULL,
+  `field_value` varchar(1000) DEFAULT NULL,
+  `field_value2` varchar(100) DEFAULT NULL,
+  `field_value3` varchar(100) DEFAULT NULL,
+  `total` varchar(255) DEFAULT NULL,
+  `reason` varchar(800) DEFAULT NULL,
+  PRIMARY KEY (`app_content_num`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
