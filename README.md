@@ -6,10 +6,9 @@
 #
 ![image](https://github.com/yeinP/LunchBox/assets/145302541/afc010e2-ec12-4d8d-9355-61426f454997)
 #
-![스크린샷 2023-12-22 184106](https://github.com/yeinP/LunchBox/assets/145302541/cb0a31aa-d311-41ea-917f-f5d960b1f132)
+![image](https://github.com/yeinP/Appsolute/assets/145302541/76043849-d743-4c5e-9453-6a34b5f61035)
 #
-![image](https://github.com/yeinP/Appsolute/assets/145302541/3ac14b51-7af7-4509-96fc-989153ef83cf)
-
+![image](https://github.com/yeinP/Appsolute/assets/145302541/b0e23a35-03a9-4473-93ab-83c2ccf88789)
 #
 ![스크린샷 2023-12-22 184123](https://github.com/yeinP/LunchBox/assets/145302541/8792532d-4a5d-4ca3-8bf8-88b168484737)
 #
