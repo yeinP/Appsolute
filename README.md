@@ -8,7 +8,8 @@
 #
 ![스크린샷 2023-12-22 184106](https://github.com/yeinP/LunchBox/assets/145302541/cb0a31aa-d311-41ea-917f-f5d960b1f132)
 #
-![스크린샷 2023-12-22 184115](https://github.com/yeinP/LunchBox/assets/145302541/fbd5f853-4408-4d0e-acb4-e983c1381ad3)
+![image](https://github.com/yeinP/Appsolute/assets/145302541/3ac14b51-7af7-4509-96fc-989153ef83cf)
+
 #
 ![스크린샷 2023-12-22 184123](https://github.com/yeinP/LunchBox/assets/145302541/8792532d-4a5d-4ca3-8bf8-88b168484737)
 #
